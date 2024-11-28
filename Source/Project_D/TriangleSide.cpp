@@ -1,6 +1,10 @@
-#include "Entrance.h"
+// Fill out your copyright notice in the Description page of Project Settings.
 
-UEntrance::UEntrance()
+
+#include "TriangleSide.h"
+
+// Sets default values for this component's properties
+UTriangleSide::UTriangleSide()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
@@ -11,15 +15,17 @@ UEntrance::UEntrance()
 
 
 // Called when the game starts
-void UEntrance::BeginPlay()
+void UTriangleSide::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// ...
 	
 }
 
 
 // Called every frame
-void UEntrance::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UTriangleSide::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
