@@ -33,10 +33,9 @@ protected:
 	FTimerHandle InputTimerHandle;
     
 	// Override these in child classes
-	virtual void ExecuteEffect1() {}
-	virtual void StartEffect2() {}
-	virtual void UpdateEffect2(float DeltaTime) {}
-	virtual void EndEffect2() {}
+	virtual void Effect1() {}
+	virtual void Effect2() {}
+	virtual void Effect2() {}
 	
 public:
 	virtual void ExecuteEffect3();
@@ -74,5 +73,6 @@ public:
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 
-	float clickDelay = 0.1f;	// delay to distinguish tap vs hold
+	float PressStartTime = 0.f;
+	float clickDelay = 0.2f;	// delay to distinguish tap vs hold
 };

@@ -12,10 +12,9 @@ class PROJECT_D_API UShieldBlock : public UAbilityBase
 {
 	GENERATED_BODY()
 
-	void ExecuteEffect1() override;
-	void StartEffect2() override;
-	void UpdateEffect2(float DeltaTime) override;
+	void Effect1() override;
+	void Effect2() override;
 	void EndEffect2() override;
-	void ExecuteEffect3() override;
+	void Effect3() override;
 	
 };

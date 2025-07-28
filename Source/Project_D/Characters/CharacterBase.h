@@ -1,11 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "../Abilities/AbilityBase.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
+
+class UAbilitySysComp;
 
 UCLASS()
 class PROJECT_D_API ACharacterBase : public ACharacter
@@ -21,10 +21,13 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY()
-	class UAbilityBase* ActiveAbility = nullptr;
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities")
+	UAbilityBase* ActiveAbility;
 	
+	// Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
-	class UAbilitySysComp* AbilitySystemComponent;
+	UAbilitySysComp* AbilitySystemComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
+	float ClickDelay = 0.1f;
 };

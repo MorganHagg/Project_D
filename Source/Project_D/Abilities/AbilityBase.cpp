@@ -19,17 +19,14 @@ void UAbilityBase::ActivateAbility(
 	const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
+	PressStartTime = GetWorld()->GetTimeSeconds();
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Started counter"));
 	SetData(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	MyCaster = Cast<ACharacterBase>(ActorInfo->AvatarActor.Get());
 	if (MyCaster){
 		MyCaster->ActiveAbility = this;}
-	
-	CurrentState = EAbilityState::WaitingForInput;
-    
-	// Clear any existing timer
-	GetWorld()->GetTimerManager().ClearTimer(InputTimerHandle);
 }
 
 void UAbilityBase::SetData(
@@ -49,44 +46,23 @@ void UAbilityBase::SetData(
 
 void UAbilityBase::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	if (CurrentState == EAbilityState::WaitingForInput)
-	{
-		// Clear any existing timer first
-		GetWorld()->GetTimerManager().ClearTimer(InputTimerHandle);
-        
-		// Start timer to distinguish between tap and hold
-		GetWorld()->GetTimerManager().SetTimer(InputTimerHandle, [this]
-		{
-			if (CurrentState == EAbilityState::WaitingForInput)	
-			{
-				// Key is still held, start Effect 2
-				CurrentState = EAbilityState::Effect2_Charging;
-				StartEffect2();
-			}
-		}, clickDelay, false);
-	}
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Input pressed"));
+	EasyEndAbility(false);
 }
 
 void UAbilityBase::InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	if (CurrentState == EAbilityState::WaitingForInput)
+	float DelayTime = GetWorld()->GetTimeSeconds() - PressStartTime;
+	UE_LOG(LogTemp, Warning, TEXT("Delay time: %f"), DelayTime);
+	if (DelayTime > MyCaster->ClickDelay)
 	{
-		// Quick tap - do Effect 1
-		GetWorld()->GetTimerManager().ClearTimer(InputTimerHandle);
-		CurrentState = EAbilityState::Effect1_Active;
-		ExecuteEffect1();
-		// Reset state before ending
-		CurrentState = EAbilityState::None;
-		EasyEndAbility(false);
+		Effect2();
 	}
-	else if (CurrentState == EAbilityState::Effect2_Charging)
+	else
 	{
-		// Released while charging - end Effect 2
-		EndEffect2();
-		// Reset state before ending
-		CurrentState = EAbilityState::None;
-		EasyEndAbility(false);
+		Effect1();
 	}
+		
 }
 
 void UAbilityBase::ExecuteEffect3()
@@ -120,10 +96,12 @@ void UAbilityBase::Interrupted()
 void UAbilityBase::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	// Clean up timer and reset state
-	if (MyCaster){
-		MyCaster->ActiveAbility = nullptr;}
+	if (MyCaster)
+	{
+		MyCaster->ActiveAbility = nullptr;
+	}
 	GetWorld()->GetTimerManager().ClearTimer(InputTimerHandle);
 	CurrentState = EAbilityState::None;
-    
+
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
