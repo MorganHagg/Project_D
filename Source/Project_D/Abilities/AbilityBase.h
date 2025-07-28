@@ -11,10 +11,8 @@ UENUM(BlueprintType)
 enum class EAbilityState : uint8
 {
 	None,
-	WaitingForInput,
-	Effect1_Active,
-	Effect2_Charging,
-	Effect3_Active
+	Pressed,
+	Effect2_Charging
 };
 
 class ACharacterBase;	//Forward declaration
@@ -32,10 +30,9 @@ protected:
 
 	FTimerHandle InputTimerHandle;
     
-	// Override these in child classes
-	virtual void Effect1() {}
-	virtual void Effect2() {}
-	virtual void Effect2() {}
+	virtual void Effect1();
+	virtual void Effect2();
+	virtual void Effect3();
 	
 public:
 	virtual void ExecuteEffect3();
@@ -75,4 +72,13 @@ public:
 
 	float PressStartTime = 0.f;
 	float clickDelay = 0.2f;	// delay to distinguish tap vs hold
+
+protected:
+    
+	FTimerHandle ThresholdTimerHandle;
+    
+	// Add these function declarations:
+	void CheckHoldThreshold();
+    
+
 };

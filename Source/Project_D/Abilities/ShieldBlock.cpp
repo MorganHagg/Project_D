@@ -15,14 +15,8 @@ void UShieldBlock::Effect2()
 	EasyEndAbility(false);
 }
 
-void UShieldBlock::EndEffect2()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Ending Effect 2");
-	EasyEndAbility(false);
-}
 void UShieldBlock::Effect3()
 {
-	Super::ExecuteEffect3();
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Executing Effect 3 Shield block");
 	EasyEndAbility(false);
 }

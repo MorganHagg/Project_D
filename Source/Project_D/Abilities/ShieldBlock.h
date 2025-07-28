@@ -14,7 +14,6 @@ class PROJECT_D_API UShieldBlock : public UAbilityBase
 
 	void Effect1() override;
 	void Effect2() override;
-	void EndEffect2() override;
 	void Effect3() override;
 	
 };

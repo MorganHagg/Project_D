@@ -71,12 +71,10 @@ void APlayableCharacter::RightClick()
 
 	if (ActiveAbility)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Ability + RightClick"));
 		ActiveAbility->ExecuteEffect3();
 	}
 	else if (AbilitySystemComponent)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Just RightClick"));
 		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::Ability7));	
 	}
 }
