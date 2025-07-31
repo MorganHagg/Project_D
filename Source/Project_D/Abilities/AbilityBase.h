@@ -79,6 +79,4 @@ protected:
     
 	// Add these function declarations:
 	void CheckHoldThreshold();
-    
-
 };

@@ -29,5 +29,5 @@ public:
 	UAbilitySysComp* AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
-	float ClickDelay = 0.1f;
+	float ClickDelay = 0.3f;
 };
