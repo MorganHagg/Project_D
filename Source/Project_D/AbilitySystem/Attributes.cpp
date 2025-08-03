@@ -30,6 +30,7 @@ void UAttributes::PostGameplayEffectExecute(const FGameplayEffectModCallbackData
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		// Health changed - update UI, check for death, etc.
-		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+		const float NewHealth = FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth());
+		SetHealth(NewHealth);
 	}
 }

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your cop yright notice in the Description page of Project Settings.
 
 
 #include "PlayableCharacter.h"
@@ -12,10 +12,19 @@ APlayableCharacter::APlayableCharacter()
 	
 }
 
+void APlayableCharacter::UpdateHealthBar(float CurrentHealth, float MaxHealth)
+{
+	Super::UpdateHealthBar(CurrentHealth, MaxHealth);
+	if (PlayerController)
+	{
+		PlayerController->UpdateUI(CurrentHealth, MaxHealth);
+	}
+}
+
 void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	PlayerController = Cast<APlayerController>(Controller);
+	PlayerController = Cast<APlayerControllerBase>(Controller);
 	PlayerController->bShowMouseCursor = true;
 	if (PlayerController) {
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer())) {

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "CharacterBase.h"
+#include "../Controller/PlayerControllerBase.h"
 #include "PlayableCharacter.generated.h"
 
 class UInputMappingContext;
@@ -34,6 +35,10 @@ class PROJECT_D_API APlayableCharacter : public ACharacterBase
 public:
     APlayableCharacter();
 
+    // IHUDUpdater
+    virtual void UpdateHealthBar(float CurrentHealth, float MaxHealth) override; 
+
+    
 protected:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -68,7 +73,7 @@ protected:
 
     // References
     UPROPERTY(BlueprintReadOnly, Category = "Player")
-    APlayerController* PlayerController;
+    APlayerControllerBase* PlayerController;
 
 
 private:

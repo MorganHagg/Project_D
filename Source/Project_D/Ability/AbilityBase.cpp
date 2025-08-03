@@ -1,5 +1,5 @@
 #include "AbilityBase.h"
-#include "../Characters/CharacterBase.h"
+#include "../Character/CharacterBase.h"
 
 UAbilityBase::UAbilityBase()
 {
