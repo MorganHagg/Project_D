@@ -5,12 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "CharacterBase.h"
+#include "../Controller/PlayerControllerBase.h"
 #include "PlayableCharacter.generated.h"
 
 class UInputMappingContext;
 class UInputAction;
 class UAbilityBase;
-class UAbilitySysComp;
 
 // Forward declare your ability input enum
 UENUM(BlueprintType)
@@ -27,13 +28,17 @@ enum class EAbilityInputID : uint8
 };
 
 UCLASS()
-class PROJECT_D_API APlayableCharacter : public ACharacter
+class PROJECT_D_API APlayableCharacter : public ACharacterBase
 {
     GENERATED_BODY()
 
 public:
     APlayableCharacter();
 
+    // IHUDUpdater
+    virtual void UpdateHealthBar(float CurrentHealth, float MaxHealth) override; 
+
+    
 protected:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -48,7 +53,7 @@ protected:
     UInputAction* IA_RightClick;
 
     // Ability Input Actions
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities  ")
     UInputAction* Ability1Action;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
@@ -66,32 +71,23 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
     UInputAction* Ability6Action;
 
-    // Components
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
-    UAbilitySysComp* AbilitySystemComponent;
-
     // References
     UPROPERTY(BlueprintReadOnly, Category = "Player")
-    APlayerController* PlayerController;
+    APlayerControllerBase* PlayerController;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Abilities")
-    UAbilityBase* ActiveAbility;
 
 private:
     // Input handling functions
     void Move();
     void RightClick();
+
+    TMap<FName, EAbilityInputID> AbilityInputMap;
     
-    void Input_Ability1_Pressed();
-    void Input_Ability1_Released();
-    void Input_Ability2_Pressed();
-    void Input_Ability2_Released();
-    void Input_Ability3_Pressed();
-    void Input_Ability3_Released();
-    void Input_Ability4_Pressed();
-    void Input_Ability4_Released();
-    void Input_Ability5_Pressed();
-    void Input_Ability5_Released();
-    void Input_Ability6_Pressed();
-    void Input_Ability6_Released();
+    UFUNCTION()
+    void OnAbilityInputPressed(const FInputActionInstance& Instance);
+
+    UFUNCTION()
+    void OnAbilityInputReleased(const FInputActionInstance& Instance);
+
+    
 };
