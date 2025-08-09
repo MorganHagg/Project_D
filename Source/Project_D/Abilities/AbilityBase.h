@@ -35,8 +35,14 @@ class PROJECT_D_API UAbilityBase : public UObject
 	GENERATED_BODY()
 public:
 	UAbilityBase();
-
-	bool ShowDebugg = false;
+	
+	bool ShowDebugg = false;		// Used when debugging
+	UPROPERTY()
+	ACharacterBase* MyCaster;
+	void ActivateAbility(ACharacterBase* NewCaster);
+	virtual void InputPressed();
+	virtual void InputReleased();
+	virtual void ExecuteEffect3();
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)
@@ -44,34 +50,32 @@ protected:
 	EAbilityActivationType AbilityType = EAbilityActivationType::None;
 	FTimerHandle InputTimerHandle;
     
-	virtual void Effect1();
-	virtual void Effect2();
-	virtual void Effect3();
-	virtual void InstantEffect();
-	virtual void PassiveEffect();
-	
-public:
-	void ActivateAbility(ACharacterBase* NewCaster);
-	virtual void ExecuteEffect3(); 
+	virtual void Effect1() {};
+	virtual void Effect2() {};
+	virtual void Effect3() {};
+	virtual void InstantEffect() {};
+	virtual void PassiveEffect() {};
 	virtual void AbilityEndCleanup();
 	virtual void EndAbility(bool interrupted);
 
 	FString GetAbilityUUID();
-	
-	UPROPERTY()
-	ACharacterBase* MyCaster;
-	
-	virtual void InputPressed();
-	virtual void InputReleased();
 
 	float PressStartTime = 0.f;
-	float clickDelay = 0.2f;	// delay to distinguish tap vs hold
+	//float clickDelay = 0.2f;	// delay to distinguish tap vs hold
 	FName AbilityName = FName("NO_NAME_ABILITY");
-
-protected:
-
 	FString AbilityUUID;
 	FTimerHandle ThresholdTimerHandle;
+
+	virtual EAbilityActivationType GetAbilityType() const 
+	{ 
+		return EAbilityActivationType::None; 
+	}
+    
+	// Virtual function that child classes override to specify their name
+	virtual FName GetAbilityName() const
+	{
+		return FName("NO_NAME_ABILITY");
+	}
     
 	// Add these function declarations:
 	void CheckHoldThreshold();

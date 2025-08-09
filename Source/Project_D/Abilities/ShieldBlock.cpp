@@ -5,6 +5,7 @@
 
 #include "Project_D/Character/CharacterBase.h"
 
+
 void UShieldBlock::Effect1()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Starting Effect 1");

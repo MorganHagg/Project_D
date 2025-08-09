@@ -14,5 +14,15 @@ class PROJECT_D_API UDodge : public UAbilityBase
 {
 	GENERATED_BODY()
 
+protected:
+
+	// Activation Type
+	EAbilityActivationType GetAbilityType() const override{
+		return EAbilityActivationType::Instant;	}
+
+	// Ability Name
+	FName GetAbilityName() const override { 
+		return FName("Dodge");	}
+	
 	void InstantEffect() override;
 };
