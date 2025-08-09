@@ -118,7 +118,7 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
        if (AbilityInputMap.Contains(Action->GetFName()))
        {
           const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
-          AbilitySystemComponent->OnAbilityInputReleased();
+          AbilitySystemComponent->OnAbilityInputReleased(); //TODO: Change the name so OnAbilityInputReleased isn't in both AbilitySystemComponent and PlayableCharacter. It's confusing
        }
     }
 }

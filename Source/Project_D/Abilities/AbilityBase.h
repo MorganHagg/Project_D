@@ -21,7 +21,7 @@ enum class EAbilityActivationType : uint8
 {
 	None,
 	Interactive,        // Complex hold/release system (Effect1/2/3) 
-	Instant,           // Single immediate effect (like a fireball)
+	Instant,           // Single immediate effect
 	Passive            // Always active, no input needed (like regeneration)
 };
 
@@ -40,9 +40,8 @@ public:
 	UPROPERTY()
 	ACharacterBase* MyCaster;
 	void ActivateAbility(ACharacterBase* NewCaster);
-	virtual void InputPressed();
-	virtual void InputReleased();
-	virtual void ExecuteEffect3();
+	void EndAbility();
+	void ExecuteEffect3();
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)
@@ -56,7 +55,6 @@ protected:
 	virtual void InstantEffect() {};
 	virtual void PassiveEffect() {};
 	virtual void AbilityEndCleanup();
-	virtual void EndAbility(bool interrupted);
 
 	FString GetAbilityUUID();
 

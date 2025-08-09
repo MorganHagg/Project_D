@@ -14,11 +14,10 @@ FString UAbilityBase::GetAbilityUUID()
     return AbilityUUID;
 }
 
-void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
+void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)   //TODO: Change name, so ActivateAbility isn't in both AbilitySystemComponent and AbilityBase 
 {
     MyCaster = NewCaster;
     
-    // Use the virtual function instead of member variable
     switch (GetAbilityType())
     {
         case EAbilityActivationType::Interactive:
@@ -49,7 +48,7 @@ void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
         case EAbilityActivationType::Instant:
         {
             InstantEffect();
-            EndAbility(false);
+            AbilityEndCleanup();
             break;
         }
         
@@ -63,7 +62,7 @@ void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
         default:
         {
             UE_LOG(LogTemp, Error, TEXT("%s has no activation type set"), *AbilityName.ToString());
-            EndAbility(false);
+            AbilityEndCleanup();
             break;
         }
     }
@@ -77,12 +76,7 @@ void UAbilityBase::CheckHoldThreshold()
     }
 }
 
-void UAbilityBase::InputPressed()
-{
-    // Implementation
-}
-
-void UAbilityBase::InputReleased()
+void UAbilityBase::EndAbility()
 {
     UWorld* World = GetWorld();
     if (!World)
@@ -103,7 +97,7 @@ void UAbilityBase::InputReleased()
         Effect1();
     }
     
-    EndAbility(false);
+    AbilityEndCleanup();
 }
 
 void UAbilityBase::ExecuteEffect3()
@@ -111,7 +105,7 @@ void UAbilityBase::ExecuteEffect3()
     if (CurrentState == EAbilityState::Effect2_Charging)
     {
         Effect3();
-        EndAbility(false);
+        AbilityEndCleanup();
     }
 }
 
@@ -124,9 +118,4 @@ void UAbilityBase::AbilityEndCleanup()
         World->GetTimerManager().ClearTimer(InputTimerHandle);
     }
     CurrentState = EAbilityState::None;
-}
-
-void UAbilityBase::EndAbility(bool interrupted)
-{
-    AbilityEndCleanup();
 }

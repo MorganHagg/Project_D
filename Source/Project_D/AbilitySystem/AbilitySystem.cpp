@@ -106,7 +106,7 @@ void UAbilitySystem::OnAbilityInputReleased()
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("Input Released"));
 	if (ActiveAbility != nullptr)
 	{
-		ActiveAbility->InputReleased();
+		ActiveAbility->EndAbility();
 		ActiveAbility = nullptr;
 	}
 }
