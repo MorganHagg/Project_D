@@ -6,12 +6,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "../Controller/ControllerBase.h"
-#include "../AbilitySystem/AbilitySystem.h"
 #include "PlayableCharacter.generated.h"
 
 class UInputMappingContext;
 class UInputAction;
-class UCustomAbilitySystemComponent;
 
 // Ability input enum
 UENUM(BlueprintType)
@@ -73,10 +71,6 @@ protected:
     // References
     UPROPERTY(BlueprintReadOnly, Category = "Player")
     AControllerBase* PlayerController;
-
-    // Custom Ability System Component
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
-    UAbilitySystem* AbilitySystemComponent;
 
 private:
     // Input handling functions

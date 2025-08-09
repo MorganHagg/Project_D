@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../AbilitySystem/AbilitySystem.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
@@ -27,4 +28,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	float ClickDelay = 0.3f;
+
+	// Custom Ability System Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
+	UAbilitySystem* AbilitySystemComponent;
 };

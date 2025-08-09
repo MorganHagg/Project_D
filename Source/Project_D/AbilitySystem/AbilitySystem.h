@@ -7,6 +7,7 @@
 #include "../Abilities/AbilityBase.h"
 #include "AbilitySystem.generated.h"
 
+class ACharacterBase;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PROJECT_D_API UAbilitySystem : public UActorComponent
@@ -26,8 +27,26 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<TSubclassOf<UAbilityBase>> GrantedAbilities; 
 
-	TArray<UAbilityBase*> Abilities;
-	void AddAbility(UAbilityBase* Ability_In, int Index);
-	void RemoveAbility(class AbilityBase* Ability_Out);
+	UPROPERTY()
+	TMap<FString, UAbilityBase*> ActiveAbilities;
+
+	ACharacterBase *MyOwner = nullptr;
+
+	UFUNCTION(BlueprintCallable)
+	void AddAbility(TSubclassOf<UAbilityBase> AbilityClass, int Index);
+
+	UFUNCTION(BlueprintCallable)  
+	void RemoveAbility(TSubclassOf<UAbilityBase> AbilityClass);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveAbilityAtIndex(int Index);
+	
+	void ActivateAbility(int AbilityIndex);
+	void OnAbilityInputReleased(int AbilityIndex);
+
+	void CleanUpAbility(FString AbilityUUID);
+	
 };

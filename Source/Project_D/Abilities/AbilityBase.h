@@ -7,6 +7,8 @@
 #include "UObject/Object.h"
 #include "AbilityBase.generated.h"
 
+class ACharacterBase;
+
 UENUM(BlueprintType)
 enum class EAbilityState : uint8
 {
@@ -35,11 +37,12 @@ protected:
 	virtual void Effect3();
 	
 public:
-	virtual void ExecuteEffect3();
-
-	virtual void ActivateAbility();
+	virtual void ActivateAbility(ACharacterBase* NewCaster);
+	virtual void ExecuteEffect3(); 
 	virtual void AbilityEndCleanup();
-	virtual void EndAbility();
+	virtual void EndAbility(bool interrupted);
+
+	FString GetAbilityUUID();
 	
 	//Data
 	struct AbilityData
@@ -55,9 +58,12 @@ public:
 
 	float PressStartTime = 0.f;
 	float clickDelay = 0.2f;	// delay to distinguish tap vs hold
+	FName AbilityName = FName("NO_NAME_ABILITY");
+	ACharacterBase *MyOwner = nullptr;
 
 protected:
-    
+
+	FString AbilityUUID;
 	FTimerHandle ThresholdTimerHandle;
     
 	// Add these function declarations:

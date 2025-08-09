@@ -2,16 +2,13 @@
 
 
 #include "AbilitySystem.h"
-
+#include "../Character/CharacterBase.h"
 
 // Sets default values for this component's properties
 UAbilitySystem::UAbilitySystem()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	PrimaryComponentTick.bCanEverTick = false;
+	MyOwner = Cast<ACharacterBase>(GetOwner());
 }
 
 
@@ -19,30 +16,98 @@ UAbilitySystem::UAbilitySystem()
 void UAbilitySystem::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
-
-// Called every frame
 void UAbilitySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
-void UAbilitySystem::AddAbility(UAbilityBase* Ability_In, int Index)
+// In AbilitySystem.cpp
+void UAbilitySystem::AddAbility(TSubclassOf<UAbilityBase> AbilityClass, int Index)
 {
-	if (Index >= 0 && Index <= Abilities.Num())
+	if (!AbilityClass)
 	{
-		Abilities.Insert(Ability_In, Index);
+		UE_LOG(LogTemp, Error, TEXT("AbilityClass is null!"));
+		return;
+	}
+	if (Index < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Index is negative: %d"), Index);
+		return;
+	}
+	// Make sure array is big enough for this slot
+	if (Index >= GrantedAbilities.Num())
+	{
+		// Resize array to fit the slot, fill with nulls
+		GrantedAbilities.SetNum(Index + 1);
+	}
+	
+	int32 ExistingIndex = GrantedAbilities.Find(AbilityClass);
+	if (ExistingIndex != INDEX_NONE)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ability already exists at slot %d"), ExistingIndex);
+		return;  // Don't add duplicate
+	}
+
+	// Ability doesn't exist, safe to add at desired Index
+	GrantedAbilities[Index] = AbilityClass;
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Adding Ability"));
+}
+
+void UAbilitySystem::RemoveAbility(TSubclassOf<UAbilityBase> AbilityClass)
+{
+	if (!AbilityClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AbilityClass is null!"));
+		return;
+	}
+    
+	// Find the ability in the array
+	int32 FoundIndex = GrantedAbilities.Find(AbilityClass);
+    
+	if (FoundIndex != INDEX_NONE)
+	{
+		GrantedAbilities[FoundIndex] = nullptr;  // Clear the slot
+		UE_LOG(LogTemp, Warning, TEXT("Found and removed ability from slot %d"), FoundIndex);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ability not found in granted abilities"));
 	}
 }
 
-void UAbilitySystem::RemoveAbility(class AbilityBase* Ability_Out)
+// Alternative: Remove by index (often more useful)
+void UAbilitySystem::RemoveAbilityAtIndex(int Index)
 {
-	Abilities.Remove(TArray<UAbilityBase*>::ElementType(Ability_Out));
+	if (GrantedAbilities.IsValidIndex(Index))
+	{
+		GrantedAbilities.RemoveAt(Index);
+	}
+}
+
+void UAbilitySystem::ActivateAbility(int AbilityIndex)
+{
+	if (GrantedAbilities.IsValidIndex(AbilityIndex) && GrantedAbilities[AbilityIndex])
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Activated"));
+		// Create instance from the class
+		UAbilityBase* NewAbility = NewObject<UAbilityBase>(this, GrantedAbilities[AbilityIndex]);
+        NewAbility->ActivateAbility(MyOwner);
+		ActiveAbilities.Add(NewAbility->GetAbilityUUID(), NewAbility);
+	}
+}
+
+void UAbilitySystem::OnAbilityInputReleased(int AbilityIndex)
+{
+	
+}
+
+void UAbilitySystem::CleanUpAbility(FString AbilityUUID)
+{
+	if (ActiveAbilities.Contains(AbilityUUID))
+	{
+		ActiveAbilities.Remove(AbilityUUID);
+	}
 }
 

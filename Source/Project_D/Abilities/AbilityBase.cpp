@@ -5,19 +5,24 @@ UAbilityBase::UAbilityBase()
 {
     // Initialize state
     CurrentState = EAbilityState::None;
+    AbilityUUID = FGuid::NewGuid().ToString();
 }
 
-void UAbilityBase::ActivateAbility()
+FString UAbilityBase::GetAbilityUUID()
 {
+    return AbilityUUID;
+}
+
+void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
+{
+    MyCaster = NewCaster;
     PressStartTime = GetWorld()->GetTimeSeconds();
     CurrentState = EAbilityState::Pressed;
     
     GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Ability Activated - Waiting for threshold"));
-
-    MyCaster = Cast<ACharacterBase>(ActorInfo->AvatarActor.Get());
     if (MyCaster)
     {
-        MyCaster->ActiveAbility = this;
+        //MyCaster->ActiveAbility = this;
         
         // Start timer to check for hold threshold
         GetWorld()->GetTimerManager().SetTimer(
@@ -71,7 +76,7 @@ void UAbilityBase::InputReleased()
     }
     
     // End the ability after executing the effect
-    EndAbility();
+    EndAbility(false);
 }
 
 void UAbilityBase::ExecuteEffect3()
@@ -82,7 +87,7 @@ void UAbilityBase::ExecuteEffect3()
         Effect3();
         
         // End ability after Effect3
-        EndAbility();
+        EndAbility(false);
     }
     else
     {
@@ -115,7 +120,7 @@ void UAbilityBase::AbilityEndCleanup()
     // Clean up timer and reset state
     if (MyCaster)
     {
-        MyCaster->ActiveAbility = nullptr;
+        //MyCaster->ActiveAbility = nullptr;
     }
     // Clear any active timers
     GetWorld()->GetTimerManager().ClearTimer(ThresholdTimerHandle);
@@ -124,7 +129,8 @@ void UAbilityBase::AbilityEndCleanup()
     CurrentState = EAbilityState::None;
 }
 
-void UAbilityBase::EndAbility()
+void UAbilityBase::EndAbility(bool interrupted)
 {
     AbilityEndCleanup();
 }
+

@@ -91,7 +91,8 @@ void APlayableCharacter::OnAbilityInputPressed(const FInputActionInstance& Insta
        if (AbilityInputMap.Contains(Action->GetFName()))
        {
           const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
-          //AbilitySystemComponent->ExecuteAbility(static_cast<int32>(InputID));
+          AbilitySystemComponent->ActivateAbility(static_cast<int32>(InputID));
+          GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Pressed"));
        }
     }
 }
@@ -105,7 +106,8 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
        if (AbilityInputMap.Contains(Action->GetFName()))
        {
           const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
-          //AbilitySystemComponent->OnAbilityInputReleased(static_cast<int32>(InputID));
+          AbilitySystemComponent->OnAbilityInputReleased(static_cast<int32>(InputID));
+          GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Released"));
        }
     }
 }
