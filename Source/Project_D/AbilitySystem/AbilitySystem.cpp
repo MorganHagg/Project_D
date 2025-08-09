@@ -8,7 +8,10 @@
 UAbilitySystem::UAbilitySystem()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+
 	MyOwner = Cast<ACharacterBase>(GetOwner());
+	GrantedAbilities.Empty();
+	ActiveAbilities.Empty();
 }
 
 
@@ -16,6 +19,7 @@ UAbilitySystem::UAbilitySystem()
 void UAbilitySystem::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 void UAbilitySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -88,26 +92,48 @@ void UAbilitySystem::RemoveAbilityAtIndex(int Index)
 
 void UAbilitySystem::ActivateAbility(int AbilityIndex)
 {
-	if (GrantedAbilities.IsValidIndex(AbilityIndex) && GrantedAbilities[AbilityIndex])
+	if (GrantedAbilities.IsValidIndex(AbilityIndex) && GrantedAbilities[AbilityIndex] && MyOwner)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Activated"));
-		// Create instance from the class
 		UAbilityBase* NewAbility = NewObject<UAbilityBase>(this, GrantedAbilities[AbilityIndex]);
-        NewAbility->ActivateAbility(MyOwner);
-		ActiveAbilities.Add(NewAbility->GetAbilityUUID(), NewAbility);
+		NewAbility->ActivateAbility(MyOwner);
+		//Make sure array is big enough for this slot
+		if (AbilityIndex + 1 >= ActiveAbilities.Num())
+		{
+			// Resize array to fit the slot, fill with nulls
+			ActiveAbilities.SetNum(AbilityIndex + 1);
+		}
+		ActiveAbilities[AbilityIndex] = NewAbility;
+
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Green, TEXT("Activate ability failed"));
 	}
 }
 
 void UAbilitySystem::OnAbilityInputReleased(int AbilityIndex)
 {
-	
+	if (ActiveAbilities.IsValidIndex(AbilityIndex) && ActiveAbilities[AbilityIndex] != nullptr)
+	{
+		// Also check if the object is still valid
+		if (IsValid(ActiveAbilities[AbilityIndex]))
+		{
+			ActiveAbilities[AbilityIndex]->InputReleased();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Active ability at index %d is invalid, cleaning up"), AbilityIndex);
+			ActiveAbilities[AbilityIndex] = nullptr;
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No active ability at index %d to release"), AbilityIndex);
+	}
 }
 
-void UAbilitySystem::CleanUpAbility(FString AbilityUUID)
+void UAbilitySystem::CleanUpAbility(int AbilityIndex)
 {
-	if (ActiveAbilities.Contains(AbilityUUID))
-	{
-		ActiveAbilities.Remove(AbilityUUID);
-	}
+	ActiveAbilities[AbilityIndex] = nullptr;
 }
 

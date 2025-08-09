@@ -30,9 +30,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TSubclassOf<UAbilityBase>> GrantedAbilities; 
 
-	UPROPERTY()
-	TMap<FString, UAbilityBase*> ActiveAbilities;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<UAbilityBase*> ActiveAbilities;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ACharacterBase *MyOwner = nullptr;
 
 	UFUNCTION(BlueprintCallable)
@@ -47,6 +48,6 @@ public:
 	void ActivateAbility(int AbilityIndex);
 	void OnAbilityInputReleased(int AbilityIndex);
 
-	void CleanUpAbility(FString AbilityUUID);
+	void CleanUpAbility(int AbilityIndex);
 	
 };
