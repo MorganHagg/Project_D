@@ -18,24 +18,96 @@ FString UAbilityBase::GetAbilityUUID()
 void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
 {
     MyCaster = NewCaster;
-    PressStartTime = GetWorld()->GetTimeSeconds();
-    CurrentState = EAbilityState::Pressed;
-
-    if (ShowDebugg)
-        GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("Ability Activated - Waiting for threshold"));
-    if (MyCaster)
+    
+    switch (AbilityType)
     {
-        //MyCaster->ActiveAbility = this;
+        case EAbilityActivationType::Interactive:
+        {
+            // Your existing complex hold/release logic
+            PressStartTime = GetWorld()->GetTimeSeconds();
+            CurrentState = EAbilityState::Pressed;
+
+            if (ShowDebugg)
+                GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("Interactive Ability Activated - Waiting for threshold"));
+            
+            if (MyCaster)
+            {
+                GetWorld()->GetTimerManager().SetTimer(
+                    ThresholdTimerHandle,
+                    this,
+                    &UAbilityBase::CheckHoldThreshold,
+                    MyCaster->ClickDelay,
+                    false
+                );
+            }
+            break;
+        }
         
-        // Start timer to check for hold threshold
-        GetWorld()->GetTimerManager().SetTimer(
-            ThresholdTimerHandle,
-            this,
-            &UAbilityBase::CheckHoldThreshold,
-            MyCaster->ClickDelay,
-            false
-        );
+        case EAbilityActivationType::Instant:
+        {
+            // Execute immediately and end
+            if (ShowDebugg)
+                GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, TEXT("Instant Ability Executed"));
+            
+            InstantEffect();
+            EndAbility(false);
+            break;
+        }
+        
+        case EAbilityActivationType::Passive:
+        {
+            // Set up passive effect (timers, buffs, etc.)
+            if (ShowDebugg)
+                GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Purple, TEXT("Passive Ability Activated"));
+            
+            PassiveEffect();
+            // Don't end - passive abilities stay active
+            break;
+        }
+        
+        case EAbilityActivationType::None:
+        default:
+        {
+            UE_LOG(LogTemp, Error, TEXT("Ability has no activation type set"));
+            EndAbility(false);
+            break;
+        }
     }
+}
+
+// Keep your existing Effect1/2/3 for interactive abilities
+void UAbilityBase::Effect1()
+{
+    if (ShowDebugg)
+        GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Green, TEXT("QUICK PRESS EFFECT"));
+}
+
+void UAbilityBase::Effect2()
+{
+    if (ShowDebugg)
+        GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, TEXT("HOLD EFFECT"));
+}
+
+void UAbilityBase::Effect3()
+{
+    if (ShowDebugg)
+        GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Red, TEXT("COMBO EFFECT"));
+}
+
+void UAbilityBase::InstantEffect()
+{
+    if (ShowDebugg)
+        GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Cyan, TEXT("INSTANT EFFECT EXECUTED"));
+    
+    // Override this in subclasses for instant abilities like fireballs, teleports, etc.
+}
+
+void UAbilityBase::PassiveEffect()
+{
+    if (ShowDebugg)
+        GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Purple, TEXT("PASSIVE EFFECT ACTIVATED"));
+    
+    // Override this in subclasses for passive abilities like regeneration, buffs, etc.
 }
 
 void UAbilityBase::CheckHoldThreshold()
@@ -104,29 +176,6 @@ void UAbilityBase::ExecuteEffect3()
     }
 }
 
-// Implement your effect functions
-void UAbilityBase::Effect1()
-{
-    if (ShowDebugg)
-        GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Green, TEXT("EFFECT 1 EXECUTED"));
-    // Your Effect1 implementation here
-}
-
-void UAbilityBase::Effect2()
-{
-    if (ShowDebugg)
-        GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, TEXT("EFFECT 2 EXECUTED"));
-    // Your Effect2 implementation here
-}
-
-void UAbilityBase::Effect3()
-{
-    if (ShowDebugg)
-        GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Red, TEXT("EFFECT 3 EXECUTED"));
-    // Your Effect3 implementation here
-}
-
-// End of Ability
 void UAbilityBase::AbilityEndCleanup()
 {
     // Clear any active timers

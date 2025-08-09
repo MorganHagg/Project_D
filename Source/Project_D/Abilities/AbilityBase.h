@@ -7,8 +7,7 @@
 #include "UObject/Object.h"
 #include "AbilityBase.generated.h"
 
-class ACharacterBase;
-
+// Enums
 UENUM(BlueprintType)
 enum class EAbilityState : uint8
 {
@@ -17,8 +16,19 @@ enum class EAbilityState : uint8
 	Effect2_Charging
 };
 
-class ACharacterBase;	//Forward declaration
+UENUM(BlueprintType)
+enum class EAbilityActivationType : uint8
+{
+	None,
+	Interactive,        // Complex hold/release system (Effect1/2/3) 
+	Instant,           // Single immediate effect (like a fireball)
+	Passive            // Always active, no input needed (like regeneration)
+};
 
+//Forward declaration
+class ACharacterBase;
+
+// Class declaration
 UCLASS()
 class PROJECT_D_API UAbilityBase : public UObject
 {
@@ -31,27 +41,22 @@ public:
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	EAbilityState CurrentState = EAbilityState::None;
-
+	EAbilityActivationType AbilityType = EAbilityActivationType::None;
 	FTimerHandle InputTimerHandle;
     
 	virtual void Effect1();
 	virtual void Effect2();
 	virtual void Effect3();
+	virtual void InstantEffect();
+	virtual void PassiveEffect();
 	
 public:
-	virtual void ActivateAbility(ACharacterBase* NewCaster);
+	void ActivateAbility(ACharacterBase* NewCaster);
 	virtual void ExecuteEffect3(); 
 	virtual void AbilityEndCleanup();
 	virtual void EndAbility(bool interrupted);
 
 	FString GetAbilityUUID();
-	
-	//Data
-	struct AbilityData
-	{
-		ACharacterBase* ActorInfo;
-	};
-	AbilityData StoredData;
 	
 	UPROPERTY()
 	ACharacterBase* MyCaster;
@@ -62,7 +67,6 @@ public:
 	float PressStartTime = 0.f;
 	float clickDelay = 0.2f;	// delay to distinguish tap vs hold
 	FName AbilityName = FName("NO_NAME_ABILITY");
-	ACharacterBase *MyOwner = nullptr;
 
 protected:
 

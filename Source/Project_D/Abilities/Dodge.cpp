@@ -5,9 +5,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Project_D/Character/CharacterBase.h"
 
-void UDodge::ActivateAbility(ACharacterBase* NewCaster)
+void UDodge::InstantEffect()
 {
-	Super::ActivateAbility(NewCaster);
+	Super::InstantEffect();
 	if (MyCaster)
 	{
 		MyCaster->GetCharacterMovement()->StopMovementImmediately();

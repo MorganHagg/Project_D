@@ -14,5 +14,5 @@ class PROJECT_D_API UDodge : public UAbilityBase
 {
 	GENERATED_BODY()
 
-	void ActivateAbility(ACharacterBase* NewCaster) override;
+	void InstantEffect() override;
 };
