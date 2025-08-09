@@ -31,7 +31,7 @@ public:
 	TArray<TSubclassOf<UAbilityBase>> GrantedAbilities; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<UAbilityBase*> ActiveAbilities;
+	UAbilityBase* ActiveAbility;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ACharacterBase *MyOwner = nullptr;
@@ -46,7 +46,7 @@ public:
 	void RemoveAbilityAtIndex(int Index);
 	
 	void ActivateAbility(int AbilityIndex);
-	void OnAbilityInputReleased(int AbilityIndex);
+	void OnAbilityInputReleased();
 
 	void CleanUpAbility(int AbilityIndex);
 	

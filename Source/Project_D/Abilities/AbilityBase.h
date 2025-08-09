@@ -47,9 +47,10 @@ public:
 	//Data
 	struct AbilityData
 	{
-		ACharacterBase* ActorInfo;      // TODO: Store copy, not pointer
+		ACharacterBase* ActorInfo;
 	};
 	AbilityData StoredData;
+	
 	UPROPERTY()
 	ACharacterBase* MyCaster;
 	

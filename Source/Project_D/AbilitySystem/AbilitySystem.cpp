@@ -8,10 +8,8 @@
 UAbilitySystem::UAbilitySystem()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-
-	MyOwner = Cast<ACharacterBase>(GetOwner());
 	GrantedAbilities.Empty();
-	ActiveAbilities.Empty();
+	ActiveAbility = nullptr;
 }
 
 
@@ -19,7 +17,7 @@ UAbilitySystem::UAbilitySystem()
 void UAbilitySystem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	MyOwner = Cast<ACharacterBase>(GetOwner());
 }
 
 void UAbilitySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -96,14 +94,7 @@ void UAbilitySystem::ActivateAbility(int AbilityIndex)
 	{
 		UAbilityBase* NewAbility = NewObject<UAbilityBase>(this, GrantedAbilities[AbilityIndex]);
 		NewAbility->ActivateAbility(MyOwner);
-		//Make sure array is big enough for this slot
-		if (AbilityIndex + 1 >= ActiveAbilities.Num())
-		{
-			// Resize array to fit the slot, fill with nulls
-			ActiveAbilities.SetNum(AbilityIndex + 1);
-		}
-		ActiveAbilities[AbilityIndex] = NewAbility;
-
+		ActiveAbility = NewAbility;
 	}
 	else
 	{
@@ -111,29 +102,13 @@ void UAbilitySystem::ActivateAbility(int AbilityIndex)
 	}
 }
 
-void UAbilitySystem::OnAbilityInputReleased(int AbilityIndex)
+void UAbilitySystem::OnAbilityInputReleased()
 {
-	if (ActiveAbilities.IsValidIndex(AbilityIndex) && ActiveAbilities[AbilityIndex] != nullptr)
-	{
-		// Also check if the object is still valid
-		if (IsValid(ActiveAbilities[AbilityIndex]))
-		{
-			ActiveAbilities[AbilityIndex]->InputReleased();
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Active ability at index %d is invalid, cleaning up"), AbilityIndex);
-			ActiveAbilities[AbilityIndex] = nullptr;
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No active ability at index %d to release"), AbilityIndex);
-	}
+	ActiveAbility->InputReleased();
 }
 
 void UAbilitySystem::CleanUpAbility(int AbilityIndex)
 {
-	ActiveAbilities[AbilityIndex] = nullptr;
+	ActiveAbility = nullptr;
 }
 

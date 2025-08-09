@@ -78,8 +78,10 @@ void APlayableCharacter::RightClick()
 {
     if (!PlayerController || !AbilitySystemComponent) return;
 
-    // Execute Ability7 (right-click ability) through our custom system
-    //AbilitySystemComponent->ExecuteAbility(static_cast<int32>(EAbilityInputID::Ability7));
+   if (AbilitySystemComponent->ActiveAbility)
+      AbilitySystemComponent->ActiveAbility->ExecuteEffect3();
+   else
+      AbilitySystemComponent->ActivateAbility(static_cast<int32>(EAbilityInputID::Ability7));
 }
 
 void APlayableCharacter::OnAbilityInputPressed(const FInputActionInstance& Instance)
@@ -106,7 +108,7 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
        if (AbilityInputMap.Contains(Action->GetFName()))
        {
           const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
-          AbilitySystemComponent->OnAbilityInputReleased(static_cast<int32>(InputID));
+          AbilitySystemComponent->OnAbilityInputReleased();
           GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Released"));
        }
     }
