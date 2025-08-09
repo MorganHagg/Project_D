@@ -75,7 +75,8 @@ protected:
 private:
     // Input handling functions
     void Move();
-    void RightClick();
+    void RightClick(const FInputActionInstance& Instance);
+    void RightClickReleased(const FInputActionInstance& Instance);
 
     TMap<FName, EAbilityInputID> AbilityInputMap;
     

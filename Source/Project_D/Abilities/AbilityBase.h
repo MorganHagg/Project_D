@@ -26,6 +26,8 @@ class PROJECT_D_API UAbilityBase : public UObject
 public:
 	UAbilityBase();
 
+	bool ShowDebugg = false;
+	
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	EAbilityState CurrentState = EAbilityState::None;

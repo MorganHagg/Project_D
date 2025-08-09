@@ -47,7 +47,4 @@ public:
 	
 	void ActivateAbility(int AbilityIndex);
 	void OnAbilityInputReleased();
-
-	void CleanUpAbility(int AbilityIndex);
-	
 };

@@ -37,6 +37,7 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
     {
        Input->BindAction(IA_Move, ETriggerEvent::Triggered, this, &APlayableCharacter::Move);
        Input->BindAction(IA_RightClick, ETriggerEvent::Started, this, &APlayableCharacter::RightClick);
+       Input->BindAction(IA_RightClick, ETriggerEvent::Completed, this, &APlayableCharacter::RightClickReleased);
        
        // Bind ability inputs
        TArray<TPair<UInputAction*, EAbilityInputID>> Bindings = {
@@ -74,14 +75,24 @@ void APlayableCharacter::Move()
     }
 }
 
-void APlayableCharacter::RightClick()
+void APlayableCharacter::RightClick(const FInputActionInstance& Instance)
 {
-    if (!PlayerController || !AbilitySystemComponent) return;
+   if (!PlayerController || !AbilitySystemComponent) return;
 
+   GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("RightClick"));
    if (AbilitySystemComponent->ActiveAbility)
       AbilitySystemComponent->ActiveAbility->ExecuteEffect3();
    else
       AbilitySystemComponent->ActivateAbility(static_cast<int32>(EAbilityInputID::Ability7));
+
+}
+
+void APlayableCharacter::RightClickReleased(const FInputActionInstance& Instance)
+{
+   if (!PlayerController || !AbilitySystemComponent) return;
+
+   GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("RightClick Release "));
+   AbilitySystemComponent->OnAbilityInputReleased();
 }
 
 void APlayableCharacter::OnAbilityInputPressed(const FInputActionInstance& Instance)
@@ -94,7 +105,6 @@ void APlayableCharacter::OnAbilityInputPressed(const FInputActionInstance& Insta
        {
           const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
           AbilitySystemComponent->ActivateAbility(static_cast<int32>(InputID));
-          GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Pressed"));
        }
     }
 }
@@ -109,7 +119,6 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
        {
           const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
           AbilitySystemComponent->OnAbilityInputReleased();
-          GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Released"));
        }
     }
 }

@@ -54,7 +54,6 @@ void UAbilitySystem::AddAbility(TSubclassOf<UAbilityBase> AbilityClass, int Inde
 
 	// Ability doesn't exist, safe to add at desired Index
 	GrantedAbilities[Index] = AbilityClass;
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Adding Ability"));
 }
 
 void UAbilitySystem::RemoveAbility(TSubclassOf<UAbilityBase> AbilityClass)
@@ -104,11 +103,10 @@ void UAbilitySystem::ActivateAbility(int AbilityIndex)
 
 void UAbilitySystem::OnAbilityInputReleased()
 {
-	ActiveAbility->InputReleased();
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("Input Released"));
+	if (ActiveAbility != nullptr)
+	{
+		ActiveAbility->InputReleased();
+		ActiveAbility = nullptr;
+	}
 }
-
-void UAbilitySystem::CleanUpAbility(int AbilityIndex)
-{
-	ActiveAbility = nullptr;
-}
-

@@ -7,7 +7,6 @@
 
 void UDodge::ActivateAbility(ACharacterBase* NewCaster)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, TEXT("DODGING"));
 	Super::ActivateAbility(NewCaster);
 	if (MyCaster)
 	{
