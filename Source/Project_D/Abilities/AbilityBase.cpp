@@ -1,6 +1,8 @@
 ﻿#include "AbilityBase.h"
 #include "../Character/CharacterBase.h"
 
+
+// TODO: Add a Enum that checks if the ability is a "Tap, Hold, Release" ability, or an "instant cast", to avoid running code unnecessary
 UAbilityBase::UAbilityBase()
 {
     // Initialize state
