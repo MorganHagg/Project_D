@@ -31,3 +31,13 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ACharacterBase::AddEffect(UGameplayEffect* NewEffect)
+{
+	GameplayEffects.Add(NewEffect->GetGUid(), NewEffect);
+}
+
+void ACharacterBase::RemoveEffect(UGameplayEffect* NewEffect)
+{
+	GameplayEffects.Remove(NewEffect->GetGUid());
+}
+

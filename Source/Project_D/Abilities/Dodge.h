@@ -24,5 +24,5 @@ protected:
 	FName GetAbilityName() const override { 
 		return FName("Dodge");	}
 	
-	void InstantEffect() override;
+	void OnInstant() override;
 };

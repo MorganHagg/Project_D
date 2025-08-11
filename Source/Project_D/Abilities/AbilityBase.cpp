@@ -47,14 +47,14 @@ void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
         
         case EAbilityActivationType::Instant:
         {
-            InstantEffect();
+            OnInstant();
             AbilityEndCleanup();
             break;
         }
         
         case EAbilityActivationType::Passive:
         {
-            PassiveEffect();
+            OnPassive();
             break;
         }
         
@@ -90,21 +90,21 @@ void UAbilityBase::EndAbility()
     
     if (CurrentState == EAbilityState::Effect2_Charging)
     {
-        Effect2();
+        OnHold();
     }
     else if (CurrentState == EAbilityState::Pressed)
     {
-        Effect1();
+        OnTap();
     }
     
     AbilityEndCleanup();
 }
 
-void UAbilityBase::ExecuteEffect3()
+void UAbilityBase::ExecuteHoldRightClick()
 {
     if (CurrentState == EAbilityState::Effect2_Charging)
     {
-        Effect3();
+        OnHoldRightClick();
         AbilityEndCleanup();
     }
 }

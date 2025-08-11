@@ -81,7 +81,7 @@ void APlayableCharacter::RightClick(const FInputActionInstance& Instance)
 
    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("RightClick"));
    if (AbilitySystemComponent->ActiveAbility)
-      AbilitySystemComponent->ActiveAbility->ExecuteEffect3();
+      AbilitySystemComponent->ActiveAbility->ExecuteHoldRightClick();
    else
       AbilitySystemComponent->InitializeAbility(static_cast<int32>(EAbilityInputID::Ability7));
 

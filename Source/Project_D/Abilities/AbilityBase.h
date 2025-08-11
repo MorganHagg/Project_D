@@ -41,7 +41,7 @@ public:
 	ACharacterBase* MyCaster;
 	void ActivateAbility(ACharacterBase* NewCaster);
 	void EndAbility();
-	void ExecuteEffect3();
+	void ExecuteHoldRightClick();
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)
@@ -49,11 +49,11 @@ protected:
 	EAbilityActivationType AbilityType = EAbilityActivationType::None;
 	FTimerHandle InputTimerHandle;
     
-	virtual void Effect1() {};
-	virtual void Effect2() {};
-	virtual void Effect3() {};
-	virtual void InstantEffect() {};
-	virtual void PassiveEffect() {};
+	virtual void OnTap() {};
+	virtual void OnHold() {};
+	virtual void OnHoldRightClick() {};
+	virtual void OnInstant() {};
+	virtual void OnPassive() {};
 	virtual void AbilityEndCleanup();
 
 	FString GetAbilityUUID();

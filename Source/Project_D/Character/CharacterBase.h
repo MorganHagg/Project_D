@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "../AbilitySystem/AbilitySystem.h"
+#include "../GameplayEffect/GameplayEffect.h"
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
@@ -27,9 +28,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void AddEffect(UGameplayEffect *NewEffect);
+	void RemoveEffect(UGameplayEffect *NewEffect);
+	
 	float ClickDelay = 0.3f;
-
+	
 	// Custom Ability System Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
 	UAbilitySystem* AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TMap<FString, UGameplayEffect*> GameplayEffects;
 };

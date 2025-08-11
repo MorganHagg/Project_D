@@ -23,7 +23,7 @@ protected:
 	FName GetAbilityName() const override { 
 		return FName("ShieldBlock");	}
 	
-	void Effect1() override;
-	void Effect2() override;
-	void Effect3() override;
+	void OnTap() override;
+	void OnHold() override;
+	void OnHoldRightClick() override;
 };
