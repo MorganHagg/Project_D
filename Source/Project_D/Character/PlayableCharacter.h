@@ -1,19 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "InputActionValue.h"
 #include "CharacterBase.h"
-#include "../Controller/PlayerControllerBase.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
+#include "../Controller/ControllerBase.h"
 #include "PlayableCharacter.generated.h"
 
 class UInputMappingContext;
 class UInputAction;
-class UAbilityBase;
 
-// Forward declare your ability input enum
+// Ability input enum
 UENUM(BlueprintType)
 enum class EAbilityInputID : uint8
 {
@@ -35,10 +33,9 @@ class PROJECT_D_API APlayableCharacter : public ACharacterBase
 public:
     APlayableCharacter();
 
-    // IHUDUpdater
-    virtual void UpdateHealthBar(float CurrentHealth, float MaxHealth) override; 
+    // // IHUDUpdater
+    // virtual void UpdateHealthBar(float CurrentHealth, float MaxHealth) override; 
 
-    
 protected:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -53,7 +50,7 @@ protected:
     UInputAction* IA_RightClick;
 
     // Ability Input Actions
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities  ")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
     UInputAction* Ability1Action;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
@@ -73,13 +70,13 @@ protected:
 
     // References
     UPROPERTY(BlueprintReadOnly, Category = "Player")
-    APlayerControllerBase* PlayerController;
-
+    AControllerBase* PlayerController;
 
 private:
     // Input handling functions
     void Move();
-    void RightClick();
+    void RightClick(const FInputActionInstance& Instance);
+    void RightClickReleased(const FInputActionInstance& Instance);
 
     TMap<FName, EAbilityInputID> AbilityInputMap;
     
@@ -88,6 +85,4 @@ private:
 
     UFUNCTION()
     void OnAbilityInputReleased(const FInputActionInstance& Instance);
-
-    
 };

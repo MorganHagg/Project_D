@@ -4,14 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "PlayerControllerBase.generated.h"
+#include "ControllerBase.generated.h"
 
 UCLASS()
-class PROJECT_D_API APlayerControllerBase : public APlayerController
+class PROJECT_D_API AControllerBase : public APlayerController
 {
 	GENERATED_BODY()
-
 public:
-	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateUI(float CurrentHealth, float MaxHealth);
 };
