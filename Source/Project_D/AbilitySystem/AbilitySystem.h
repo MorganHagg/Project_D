@@ -45,6 +45,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RemoveAbilityAtIndex(int Index);
 	
-	void ActivateAbility(int AbilityIndex);
+	void InitializeAbility(int AbilityIndex);
 	void OnAbilityInputReleased();
 };

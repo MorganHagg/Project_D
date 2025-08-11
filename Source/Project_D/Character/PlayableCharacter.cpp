@@ -83,7 +83,7 @@ void APlayableCharacter::RightClick(const FInputActionInstance& Instance)
    if (AbilitySystemComponent->ActiveAbility)
       AbilitySystemComponent->ActiveAbility->ExecuteEffect3();
    else
-      AbilitySystemComponent->ActivateAbility(static_cast<int32>(EAbilityInputID::Ability7));
+      AbilitySystemComponent->InitializeAbility(static_cast<int32>(EAbilityInputID::Ability7));
 
 }
 
@@ -104,7 +104,7 @@ void APlayableCharacter::OnAbilityInputPressed(const FInputActionInstance& Insta
        if (AbilityInputMap.Contains(Action->GetFName()))
        {
           const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
-          AbilitySystemComponent->ActivateAbility(static_cast<int32>(InputID));
+          AbilitySystemComponent->InitializeAbility(static_cast<int32>(InputID));
        }
     }
 }

@@ -87,7 +87,7 @@ void UAbilitySystem::RemoveAbilityAtIndex(int Index)
 	}
 }
 
-void UAbilitySystem::ActivateAbility(int AbilityIndex)
+void UAbilitySystem::InitializeAbility(int AbilityIndex)
 {
 	if (GrantedAbilities.IsValidIndex(AbilityIndex) && GrantedAbilities[AbilityIndex] && MyOwner)
 	{

@@ -14,13 +14,13 @@ FString UAbilityBase::GetAbilityUUID()
     return AbilityUUID;
 }
 
-void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)   //TODO: Change name, so ActivateAbility isn't in both AbilitySystemComponent and AbilityBase 
+void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
 {
     MyCaster = NewCaster;
     
     switch (GetAbilityType())
     {
-        case EAbilityActivationType::Interactive:
+        case EAbilityActivationType::Interactive:   
         {
             UWorld* World = GetWorld();
             if (!World)
