@@ -85,7 +85,7 @@ void UAbilityBase::EndAbility()
         return;
     }
     
-    float HoldTime = World->GetTimeSeconds() - PressStartTime;
+    float HoldTime = World->GetTimeSeconds() - PressStartTime;      //TODO: Check if this is needed
     World->GetTimerManager().ClearTimer(ThresholdTimerHandle);
     
     if (CurrentState == EAbilityState::Effect2_Charging)
@@ -100,7 +100,7 @@ void UAbilityBase::EndAbility()
     AbilityEndCleanup();
 }
 
-void UAbilityBase::ExecuteHoldRightClick()
+void UAbilityBase::ExecuteHoldRightClick()      //TODO: Change this name, it's really bad
 {
     if (CurrentState == EAbilityState::Effect2_Charging)
     {

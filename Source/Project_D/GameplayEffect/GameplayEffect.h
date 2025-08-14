@@ -44,21 +44,3 @@ private:
 	float IntervalTimer = 0.0f;
 	float TimeRemaining = 0.0f;
 };
-
-
-
-/*
-TStatId YouClassName::GetStatId() const
-{
-RETURN_QUICK_DECLARE_CYCLE_STAT(YouClassName, STATGROUP_Tickables);
-}
-*/
-// If Tick multiple times a frame becomes an issue
-/*
-uint32 LastFrameNumberWeTicked;
-	if (LastFrameNumberWeTicked == GFrameCounter){
-return;}
-	SOME CODE HERE
-LastFrameNumberWeTicked = GFrameCounter;
-*/
-
