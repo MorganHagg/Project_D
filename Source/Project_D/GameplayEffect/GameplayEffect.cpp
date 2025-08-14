@@ -3,18 +3,23 @@
 
 #include "GameplayEffect.h"
 #include "../Character/CharacterBase.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Project_D/Interfaces/EffectHandler.h"
 
 
-
-void UGameplayEffect::Activate(ACharacterBase* Target)
-{
-	if (Target)
+void UGameplayEffect::Activate(AActor* Target)
+{	//TODO: Change DoesImplementInterface - IEffectHandler* EffectActor = Cast<IEffectHandler>(Target); will only create a pointer if it's valid (WIll return null if interface
+	// is implemented in Blueprint (because Polymorphy, duh!)
+	if (Target && UKismetSystemLibrary::DoesImplementInterface(Target, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
 	{
 		MyTarget = Target;
-		MyTarget->AddEffect(this);	
+		IEffectHandler* EffectActor = Cast<IEffectHandler>(Target);
+		EffectActor->AddEffect(this);
+		
+		IntervalTimer = Interval;
+		TimeRemaining = LifeTime;
 	}
-	IntervalTimer = Interval;
-	TimeRemaining = LifeTime;
+	else{	return;	}
 }
 
 void UGameplayEffect::Tick(float DeltaTime)
@@ -24,7 +29,7 @@ void UGameplayEffect::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *MyTarget->GetName());
 	}
 	
-	if (Interval != 0 && (IntervalTimer -= DeltaTime) <= 0)		// Just want to point out how beautiful the "check and update value" in one go, is
+	if (Interval != 0 && (IntervalTimer -= DeltaTime) <= 0)
 	{
 		IntervalEffect();
 		IntervalTimer = Interval;
@@ -39,10 +44,31 @@ void UGameplayEffect::Tick(float DeltaTime)
 
 void UGameplayEffect::Deactivate()
 {
-	if (MyTarget)
-		MyTarget->RemoveEffect(this);
-	
+	if (MyTarget && UKismetSystemLibrary::DoesImplementInterface(MyTarget, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
+	{
+		IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
+		EffectActor->RemoveEffect(this);
+	}
 }
 
-
-
+void UGameplayEffect::ExecuteEffect(AActor *Target)
+{
+	if (Target && UKismetSystemLibrary::DoesImplementInterface(MyTarget, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
+	{
+		Target = MyTarget;
+		switch (GetDamageType())
+		{
+		case EDamageType::Physical:
+		case EDamageType::Magical:
+			{
+				IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
+				EffectActor->ReceiveDamage(this);
+			}
+		case EDamageType::Healing:
+			{
+				IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
+				EffectActor->ReceiveHealing(this);
+			}
+		}
+	}
+}

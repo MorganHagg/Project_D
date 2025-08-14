@@ -31,6 +31,25 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ACharacterBase::ApplyGameplayEffect(UGameplayEffect* Effect)
+{
+	switch (Effect->GetEffectType())
+	{ 
+	case EEffectType::None:
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("ApplyGameplayEffect : None"));
+		}
+	case EEffectType::Instant:
+		{
+			Effect->ExecuteEffect(this);
+		}
+	case EEffectType::Status:
+		{
+			Effect->Activate(this);
+		}
+	}
+}
+
 void ACharacterBase::AddEffect(UGameplayEffect* NewEffect)
 {
 	GameplayEffects.Add(NewEffect->GetGUid(), NewEffect);
@@ -39,5 +58,15 @@ void ACharacterBase::AddEffect(UGameplayEffect* NewEffect)
 void ACharacterBase::RemoveEffect(UGameplayEffect* NewEffect)
 {
 	GameplayEffects.Remove(NewEffect->GetGUid());
+}
+
+void ACharacterBase::ReceiveDamage(UGameplayEffect* Effect)
+{
+	
+}
+
+void ACharacterBase::ReceiveHealing(UGameplayEffect* Effect)
+{
+	
 }
 

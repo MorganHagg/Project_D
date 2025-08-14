@@ -33,8 +33,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UAbilityBase* ActiveAbility;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	ACharacterBase *MyOwner = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)	// TODO: Change this to Pawn
+	AActor *MyOwner = nullptr;
 
 	UFUNCTION(BlueprintCallable)
 	void AddAbility(TSubclassOf<UAbilityBase> AbilityClass, int Index);

@@ -1,5 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+
+// TODO: Remove this node in the polymorph-chain.
+// Reason: NPC (enemy etc.) can implement component (AbilitySystem) and interface (EffectHabndler)
+// Thus it doesn't need to run setupplayerinput etc.
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -28,10 +33,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void ApplyGameplayEffect(UGameplayEffect* Effect);
 	void AddEffect(UGameplayEffect *NewEffect);
 	void RemoveEffect(UGameplayEffect *NewEffect);
-	
-	float ClickDelay = 0.3f;
+	void ReceiveDamage(UGameplayEffect* Effect);
+	void ReceiveHealing(UGameplayEffect* Effect);
 	
 	// Custom Ability System Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")

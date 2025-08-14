@@ -14,10 +14,9 @@ FString UAbilityBase::GetAbilityUUID()
     return AbilityUUID;
 }
 
-void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
+void UAbilityBase::ActivateAbility(AActor* NewCaster)
 {
-    MyCaster = NewCaster;
-    
+    MyCaster = Cast<ACharacterBase>(NewCaster);
     switch (GetAbilityType())
     {
         case EAbilityActivationType::Interactive:   
@@ -38,7 +37,7 @@ void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
                     ThresholdTimerHandle,
                     this,
                     &UAbilityBase::CheckHoldThreshold,
-                    MyCaster->ClickDelay,
+                    ClickDelay,
                     false
                 );
             }
@@ -102,11 +101,8 @@ void UAbilityBase::EndAbility()
 
 void UAbilityBase::ExecuteHoldRightClick()      //TODO: Change this name, it's really bad
 {
-    if (CurrentState == EAbilityState::Effect2_Charging)
-    {
-        OnHoldRightClick();
-        AbilityEndCleanup();
-    }
+    OnHoldRightClick();
+    AbilityEndCleanup();
 }
 
 void UAbilityBase::AbilityEndCleanup()

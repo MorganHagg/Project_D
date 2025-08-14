@@ -17,7 +17,7 @@ UAbilitySystem::UAbilitySystem()
 void UAbilitySystem::BeginPlay()
 {
 	Super::BeginPlay();
-	MyOwner = Cast<ACharacterBase>(GetOwner());
+	MyOwner = GetOwner();
 }
 
 void UAbilitySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

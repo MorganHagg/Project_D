@@ -37,9 +37,12 @@ public:
 	UAbilityBase();
 	
 	bool ShowDebugg = false;		// Used when debugging
+
 	UPROPERTY()
 	ACharacterBase* MyCaster;
-	void ActivateAbility(ACharacterBase* NewCaster);
+	UPROPERTY()
+	ACharacterBase* MyTarget;
+	void ActivateAbility(AActor* NewCaster);
 	void EndAbility();
 	void ExecuteHoldRightClick();
 	
@@ -48,6 +51,9 @@ protected:
 	EAbilityState CurrentState = EAbilityState::None;
 	EAbilityActivationType AbilityType = EAbilityActivationType::None;
 	FTimerHandle InputTimerHandle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float ClickDelay = 0.3f;
     
 	virtual void OnTap() {};
 	virtual void OnHold() {};

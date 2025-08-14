@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "../GameplayEffect/GameplayEffect.h"
 #include "EffectHandler.generated.h"
 
 // This class does not need to be modified.
@@ -18,5 +19,9 @@ class PROJECT_D_API IEffectHandler
 	GENERATED_BODY()
 	
 public:
-	virtual void ApplyEffect() = 0;
+	virtual void ApplyGameplayEffect(UGameplayEffect* Effect) = 0;
+	virtual void AddEffect(UGameplayEffect* Effect) = 0;
+	virtual void RemoveEffect(UGameplayEffect* Effect) = 0;
+	virtual void ReceiveDamage(UGameplayEffect* Effect) = 0;
+	virtual void ReceiveHealing(UGameplayEffect* Effect) = 0;
 };
