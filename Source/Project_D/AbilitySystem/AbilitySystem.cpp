@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem.h"
-#include "../Character/CharacterBase.h"
+//#include "../Character/PlayableCharacter.h"
 
 // Sets default values for this component's properties
 UAbilitySystem::UAbilitySystem()
@@ -17,7 +17,7 @@ UAbilitySystem::UAbilitySystem()
 void UAbilitySystem::BeginPlay()
 {
 	Super::BeginPlay();
-	MyOwner = Cast<ACharacterBase>(GetOwner());
+	MyOwner = StaticCast<ACharacter*>(GetOwner());
 }
 
 void UAbilitySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -26,7 +26,7 @@ void UAbilitySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 }
 
 // In AbilitySystem.cpp
-void UAbilitySystem::AddAbility(TSubclassOf<UAbilityBase> AbilityClass, int Index)
+void UAbilitySystem::AddAbility(TSubclassOf<UAbility> AbilityClass, int Index)
 {
 	if (!AbilityClass)
 	{
@@ -56,7 +56,7 @@ void UAbilitySystem::AddAbility(TSubclassOf<UAbilityBase> AbilityClass, int Inde
 	GrantedAbilities[Index] = AbilityClass;
 }
 
-void UAbilitySystem::RemoveAbility(TSubclassOf<UAbilityBase> AbilityClass)
+void UAbilitySystem::RemoveAbility(TSubclassOf<UAbility> AbilityClass)
 {
 	if (!AbilityClass)
 	{
@@ -91,7 +91,7 @@ void UAbilitySystem::InitializeAbility(int AbilityIndex)
 {
 	if (GrantedAbilities.IsValidIndex(AbilityIndex) && GrantedAbilities[AbilityIndex] && MyOwner)
 	{
-		UAbilityBase* NewAbility = NewObject<UAbilityBase>(this, GrantedAbilities[AbilityIndex]);
+		UAbility* NewAbility = NewObject<UAbility>(this, GrantedAbilities[AbilityIndex]);
 		NewAbility->ActivateAbility(MyOwner);
 		ActiveAbility = NewAbility;
 	}
@@ -101,7 +101,7 @@ void UAbilitySystem::InitializeAbility(int AbilityIndex)
 	}
 }
 
-void UAbilitySystem::OnAbilityInputReleased()
+	void UAbilitySystem::OnAbilityInputReleased()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("Input Released"));
 	if (ActiveAbility != nullptr)

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "UObject/Object.h"
-#include "AbilityBase.generated.h"
+#include "Ability.generated.h"
 
 // Enums
 UENUM(BlueprintType)
@@ -30,30 +30,36 @@ class ACharacterBase;
 
 // Class declaration
 UCLASS()
-class PROJECT_D_API UAbilityBase : public UObject
+class PROJECT_D_API UAbility : public UObject
 {
 	GENERATED_BODY()
 public:
-	UAbilityBase();
+	UAbility();
 	
 	bool ShowDebugg = false;		// Used when debugging
+
 	UPROPERTY()
-	ACharacterBase* MyCaster;
-	void ActivateAbility(ACharacterBase* NewCaster);
+	ACharacter* MyCaster;
+	UPROPERTY()
+	ACharacter* MyTarget;
+	void ActivateAbility(AActor* NewCaster);
 	void EndAbility();
-	void ExecuteEffect3();
+	void OnModify();
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	EAbilityState CurrentState = EAbilityState::None;
 	EAbilityActivationType AbilityType = EAbilityActivationType::None;
 	FTimerHandle InputTimerHandle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float ClickDelay = 0.3f;
     
-	virtual void Effect1() {};
-	virtual void Effect2() {};
-	virtual void Effect3() {};
-	virtual void InstantEffect() {};
-	virtual void PassiveEffect() {};
+	virtual void OnTap() {};
+	virtual void OnHold() {};
+	virtual void OnHoldRightClick() {};
+	virtual void OnInstant() {};
+	virtual void OnPassive() {};
 	virtual void AbilityEndCleanup();
 
 	FString GetAbilityUUID();

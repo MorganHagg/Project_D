@@ -4,27 +4,16 @@
 #include "PlayableCharacter.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
-
-// Sets default values
 APlayableCharacter::APlayableCharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+   AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystem>(TEXT("AbilitySystemComponent"));
 }
-//
-// void APlayableCharacter::UpdateHealthBar(float CurrentHealth, float MaxHealth)
-// {
-//     Super::UpdateHealthBar(CurrentHealth, MaxHealth);
-//     if (PlayerController)
-//     {
-//        PlayerController->UpdateUI(CurrentHealth, MaxHealth);
-//     }
-// }
 
 void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-    PlayerController = Cast<AControllerBase>(Controller);
+    PlayerController = Cast<APlayerController>(GetController());
     PlayerController->bShowMouseCursor = true;
     
     if (PlayerController) {
@@ -61,6 +50,45 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
     }
 }
 
+void APlayableCharacter::ApplyGameplayEffect(UGameplayEffect* Effect)
+{
+   switch (Effect->GetEffectType())
+   { 
+   case EEffectType::None:
+      {
+         GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("ApplyGameplayEffect : None"));
+      }
+   case EEffectType::Instant:
+      {
+         Effect->ExecuteEffect(this);
+      }
+   case EEffectType::Status:
+      {
+         Effect->Activate(this);
+      }
+   }
+}
+
+void APlayableCharacter::AddEffect(UGameplayEffect* NewEffect)
+{
+   GameplayEffects.Add(NewEffect->GetGUid(), NewEffect);
+}
+
+void APlayableCharacter::RemoveEffect(UGameplayEffect* NewEffect)
+{
+   GameplayEffects.Remove(NewEffect->GetGUid());
+}
+
+void APlayableCharacter::ReceiveDamage(UGameplayEffect* Effect)
+{
+   
+}
+
+void APlayableCharacter::ReceiveHealing(UGameplayEffect* Effect)
+{
+   
+}
+
 void APlayableCharacter::Move()
 { 
     if (PlayerController)
@@ -81,7 +109,7 @@ void APlayableCharacter::RightClick(const FInputActionInstance& Instance)
 
    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("RightClick"));
    if (AbilitySystemComponent->ActiveAbility)
-      AbilitySystemComponent->ActiveAbility->ExecuteEffect3();
+      AbilitySystemComponent->ActiveAbility->OnModify();
    else
       AbilitySystemComponent->InitializeAbility(static_cast<int32>(EAbilityInputID::Ability7));
 
@@ -118,7 +146,7 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
        if (AbilityInputMap.Contains(Action->GetFName()))
        {
           const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
-          AbilitySystemComponent->OnAbilityInputReleased(); //TODO: Change the name so OnAbilityInputReleased isn't in both AbilitySystemComponent and PlayableCharacter. It's confusing
+          AbilitySystemComponent->OnAbilityInputReleased();
        }
     }
 }

@@ -1,23 +1,22 @@
 ﻿// AbilityBase.cpp
 
-#include "AbilityBase.h"
-#include "../Character/CharacterBase.h"
+#include "Ability.h"
+#include "../Character/PlayableCharacter.h"
 
-UAbilityBase::UAbilityBase()
+UAbility::UAbility()
 {
     CurrentState = EAbilityState::None;
     AbilityUUID = FGuid::NewGuid().ToString();
 }
 
-FString UAbilityBase::GetAbilityUUID()
+FString UAbility::GetAbilityUUID()
 {
     return AbilityUUID;
 }
 
-void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
+void UAbility::ActivateAbility(AActor* NewCaster)
 {
-    MyCaster = NewCaster;
-    
+    MyCaster = Cast<APlayableCharacter>(NewCaster);
     switch (GetAbilityType())
     {
         case EAbilityActivationType::Interactive:   
@@ -37,8 +36,8 @@ void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
                 World->GetTimerManager().SetTimer(
                     ThresholdTimerHandle,
                     this,
-                    &UAbilityBase::CheckHoldThreshold,
-                    MyCaster->ClickDelay,
+                    &UAbility::CheckHoldThreshold,
+                    ClickDelay,
                     false
                 );
             }
@@ -47,14 +46,14 @@ void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
         
         case EAbilityActivationType::Instant:
         {
-            InstantEffect();
+            OnInstant();
             AbilityEndCleanup();
             break;
         }
         
         case EAbilityActivationType::Passive:
         {
-            PassiveEffect();
+            OnPassive();
             break;
         }
         
@@ -68,7 +67,7 @@ void UAbilityBase::ActivateAbility(ACharacterBase* NewCaster)
     }
 }
 
-void UAbilityBase::CheckHoldThreshold()
+void UAbility::CheckHoldThreshold()
 {
     if (CurrentState == EAbilityState::Pressed)
     {
@@ -76,7 +75,7 @@ void UAbilityBase::CheckHoldThreshold()
     }
 }
 
-void UAbilityBase::EndAbility()
+void UAbility::EndAbility()
 {
     UWorld* World = GetWorld();
     if (!World)
@@ -85,31 +84,28 @@ void UAbilityBase::EndAbility()
         return;
     }
     
-    float HoldTime = World->GetTimeSeconds() - PressStartTime;
+    float HoldTime = World->GetTimeSeconds() - PressStartTime;      //TODO: Check if this is needed
     World->GetTimerManager().ClearTimer(ThresholdTimerHandle);
     
     if (CurrentState == EAbilityState::Effect2_Charging)
     {
-        Effect2();
+        OnHold();
     }
     else if (CurrentState == EAbilityState::Pressed)
     {
-        Effect1();
+        OnTap();
     }
     
     AbilityEndCleanup();
 }
 
-void UAbilityBase::ExecuteEffect3()
+void UAbility::OnModify()      //TODO: Change this name, it's really bad
 {
-    if (CurrentState == EAbilityState::Effect2_Charging)
-    {
-        Effect3();
-        AbilityEndCleanup();
-    }
+    OnHoldRightClick();
+    AbilityEndCleanup();
 }
 
-void UAbilityBase::AbilityEndCleanup()
+void UAbility::AbilityEndCleanup()
 {
     UWorld* World = GetWorld();
     if (World)

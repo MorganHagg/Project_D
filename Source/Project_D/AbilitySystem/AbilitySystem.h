@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "../Abilities/AbilityBase.h"
+#include "../Abilities/Ability.h"
 #include "AbilitySystem.generated.h"
 
 class ACharacterBase;
@@ -28,19 +28,19 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<TSubclassOf<UAbilityBase>> GrantedAbilities; 
+	TArray<TSubclassOf<UAbility>> GrantedAbilities; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UAbilityBase* ActiveAbility;
+	UAbility* ActiveAbility;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	ACharacterBase *MyOwner = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)	// TODO: Change this to Pawn
+	ACharacter *MyOwner = nullptr;
 
 	UFUNCTION(BlueprintCallable)
-	void AddAbility(TSubclassOf<UAbilityBase> AbilityClass, int Index);
+	void AddAbility(TSubclassOf<UAbility> AbilityClass, int Index);
 
 	UFUNCTION(BlueprintCallable)  
-	void RemoveAbility(TSubclassOf<UAbilityBase> AbilityClass);
+	void RemoveAbility(TSubclassOf<UAbility> AbilityClass);
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveAbilityAtIndex(int Index);

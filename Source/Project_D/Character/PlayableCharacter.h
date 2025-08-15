@@ -1,11 +1,15 @@
 ﻿#pragma once
 
+// Engine includes
 #include "CoreMinimal.h"
-#include "CharacterBase.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "../Controller/ControllerBase.h"
+// Custom includes
+#include "../Interfaces/EffectHandler.h"
+#include "../AbilitySystem/AbilitySystem.h"
+#include "../GameplayEffect/GameplayEffect.h"
+//Generated
 #include "PlayableCharacter.generated.h"
 
 class UInputMappingContext;
@@ -26,16 +30,27 @@ enum class EAbilityInputID : uint8
 };
 
 UCLASS()
-class PROJECT_D_API APlayableCharacter : public ACharacterBase
+class PROJECT_D_API APlayableCharacter : public ACharacter, public IEffectHandler
 {
     GENERATED_BODY()
 
 public:
     APlayableCharacter();
 
-    // // IHUDUpdater
-    // virtual void UpdateHealthBar(float CurrentHealth, float MaxHealth) override; 
+    // Custom Ability System Component
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
+    UAbilitySystem* AbilitySystemComponent;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TMap<FString, UGameplayEffect*> GameplayEffects;
+
+    // Interface functions
+    void ApplyGameplayEffect(UGameplayEffect* Effect);
+    void AddEffect(UGameplayEffect *NewEffect);
+    void RemoveEffect(UGameplayEffect *NewEffect);
+    void ReceiveDamage(UGameplayEffect* Effect);
+    void ReceiveHealing(UGameplayEffect* Effect);
+    
 protected:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -70,7 +85,8 @@ protected:
 
     // References
     UPROPERTY(BlueprintReadOnly, Category = "Player")
-    AControllerBase* PlayerController;
+    APlayerController* PlayerController;
+
 
 private:
     // Input handling functions

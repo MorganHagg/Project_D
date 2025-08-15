@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilityBase.h"
+#include "Ability.h"
 #include "ShieldBlock.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_D_API UShieldBlock : public UAbilityBase
+class PROJECT_D_API UShieldBlock : public UAbility
 {
 	GENERATED_BODY()
 protected:
@@ -23,7 +23,7 @@ protected:
 	FName GetAbilityName() const override { 
 		return FName("ShieldBlock");	}
 	
-	void Effect1() override;
-	void Effect2() override;
-	void Effect3() override;
+	void OnTap() override;
+	void OnHold() override;
+	void OnHoldRightClick() override;
 };

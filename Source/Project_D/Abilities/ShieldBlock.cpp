@@ -3,20 +3,18 @@
 
 #include "ShieldBlock.h"
 
-#include "Project_D/Character/CharacterBase.h"
 
-
-void UShieldBlock::Effect1()
+void UShieldBlock::OnTap()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Starting Effect 1");
 }
 
-void UShieldBlock::Effect2()
+void UShieldBlock::OnHold()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Starting Effect 2");
 }
 
-void UShieldBlock::Effect3()
+void UShieldBlock::OnHoldRightClick()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Executing Effect 3 Shield block");
 }
