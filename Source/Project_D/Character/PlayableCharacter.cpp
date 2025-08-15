@@ -107,10 +107,9 @@ void APlayableCharacter::Move()
 void APlayableCharacter::RightClick(const FInputActionInstance& Instance)
 {
    if (!PlayerController || !AbilitySystemComponent) return;
-
    GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("RightClick"));
    if (AbilitySystemComponent->ActiveAbility)
-      AbilitySystemComponent->ActiveAbility->OnModify();
+      AbilitySystemComponent->ActiveAbility->DoModify();
    else
       AbilitySystemComponent->InitializeAbility(static_cast<int32>(EAbilityInputID::Ability7));
 

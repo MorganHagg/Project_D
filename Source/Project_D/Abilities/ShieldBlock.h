@@ -25,5 +25,6 @@ protected:
 	
 	void OnTap() override;
 	void OnHold() override;
-	void OnHoldRightClick() override;
+	void OnHoldEnd() override;
+	void OnModify() override;
 };

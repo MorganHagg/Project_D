@@ -20,9 +20,9 @@ UENUM(BlueprintType)
 enum class EAbilityActivationType : uint8
 {
 	None,
-	Interactive,        // Complex hold/release system (Effect1/2/3) 
+	Interactive,        // Complex hold/modify system (Effect1/2/3) 
 	Instant,           // Single immediate effect
-	Passive            // Always active, no input needed (like regeneration)
+	Passive            // Always active, no input needed
 };
 
 //Forward declaration
@@ -42,9 +42,15 @@ public:
 	ACharacter* MyCaster;
 	UPROPERTY()
 	ACharacter* MyTarget;
+
+	// Activating all abilities
 	void ActivateAbility(AActor* NewCaster);
+
+	// On right-click while hold
+	void DoModify() {OnModify();};
+
+	// Ending all abilities
 	void EndAbility();
-	void OnModify();
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)
@@ -54,13 +60,14 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float ClickDelay = 0.3f;
-    
+
+	// Child functions
 	virtual void OnTap() {};
 	virtual void OnHold() {};
-	virtual void OnHoldRightClick() {};
+	virtual void OnHoldEnd() {};
+	virtual void OnModify() {};
 	virtual void OnInstant() {};
 	virtual void OnPassive() {};
-	virtual void AbilityEndCleanup();
 
 	FString GetAbilityUUID();
 
@@ -82,5 +89,5 @@ protected:
 	}
     
 	// Add these function declarations:
-	void CheckHoldThreshold();
+	void ThresholdMet();
 };

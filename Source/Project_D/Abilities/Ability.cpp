@@ -2,7 +2,7 @@
 
 #include "Ability.h"
 #include "../Character/PlayableCharacter.h"
-
+// TODO: Check if this object gets market 
 UAbility::UAbility()
 {
     CurrentState = EAbilityState::None;
@@ -36,7 +36,7 @@ void UAbility::ActivateAbility(AActor* NewCaster)
                 World->GetTimerManager().SetTimer(
                     ThresholdTimerHandle,
                     this,
-                    &UAbility::CheckHoldThreshold,
+                    &UAbility::ThresholdMet,
                     ClickDelay,
                     false
                 );
@@ -47,7 +47,6 @@ void UAbility::ActivateAbility(AActor* NewCaster)
         case EAbilityActivationType::Instant:
         {
             OnInstant();
-            AbilityEndCleanup();
             break;
         }
         
@@ -61,20 +60,12 @@ void UAbility::ActivateAbility(AActor* NewCaster)
         default:
         {
             UE_LOG(LogTemp, Error, TEXT("%s has no activation type set"), *AbilityName.ToString());
-            AbilityEndCleanup();
             break;
         }
     }
 }
 
-void UAbility::CheckHoldThreshold()
-{
-    if (CurrentState == EAbilityState::Pressed)
-    {
-        CurrentState = EAbilityState::Effect2_Charging;
-    }
-}
-
+// Checks the timer set in ActivateAbility, and activates the according logic
 void UAbility::EndAbility()
 {
     UWorld* World = GetWorld();
@@ -89,29 +80,17 @@ void UAbility::EndAbility()
     
     if (CurrentState == EAbilityState::Effect2_Charging)
     {
-        OnHold();
+        OnHoldEnd();
     }
     else if (CurrentState == EAbilityState::Pressed)
     {
         OnTap();
     }
-    
-    AbilityEndCleanup();
 }
 
-void UAbility::OnModify()      //TODO: Change this name, it's really bad
+// Ran 
+void UAbility::ThresholdMet()
 {
-    OnHoldRightClick();
-    AbilityEndCleanup();
-}
-
-void UAbility::AbilityEndCleanup()
-{
-    UWorld* World = GetWorld();
-    if (World)
-    {
-        World->GetTimerManager().ClearTimer(ThresholdTimerHandle);
-        World->GetTimerManager().ClearTimer(InputTimerHandle);
-    }
-    CurrentState = EAbilityState::None;
+    CurrentState = EAbilityState::Effect2_Charging;
+    OnHold();
 }

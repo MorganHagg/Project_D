@@ -14,7 +14,12 @@ void UShieldBlock::OnHold()
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Starting Effect 2");
 }
 
-void UShieldBlock::OnHoldRightClick()
+void UShieldBlock::OnHoldEnd()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Ending Effect 2");
+}
+
+void UShieldBlock::OnModify()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Executing Effect 3 Shield block");
 }
