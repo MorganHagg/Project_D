@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "UObject/Object.h"
-#include "AbilityBase.generated.h"
+#include "Ability.generated.h"
 
 // Enums
 UENUM(BlueprintType)
@@ -30,21 +30,21 @@ class ACharacterBase;
 
 // Class declaration
 UCLASS()
-class PROJECT_D_API UAbilityBase : public UObject
+class PROJECT_D_API UAbility : public UObject
 {
 	GENERATED_BODY()
 public:
-	UAbilityBase();
+	UAbility();
 	
 	bool ShowDebugg = false;		// Used when debugging
 
 	UPROPERTY()
-	ACharacterBase* MyCaster;
+	ACharacter* MyCaster;
 	UPROPERTY()
-	ACharacterBase* MyTarget;
+	ACharacter* MyTarget;
 	void ActivateAbility(AActor* NewCaster);
 	void EndAbility();
-	void ExecuteHoldRightClick();
+	void OnModify();
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)

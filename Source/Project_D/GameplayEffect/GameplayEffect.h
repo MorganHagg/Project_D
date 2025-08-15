@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "GameFramework/Character.h"
 #include "Tickable.h"
 #include "EffectType.h"
 #include "GameplayEffect.generated.h"
@@ -39,9 +40,9 @@ public:
 	float Healing = 0.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	AActor *MyTarget = nullptr;
+	ACharacter *MyTarget = nullptr;
 
-	virtual void Activate(AActor *Target);
+	virtual void Activate(ACharacter *Target);
 	
 	virtual void Tick(float DeltaTime) override;
 
@@ -49,7 +50,7 @@ public:
 
 	virtual void IntervalEffect() {};
 
-	virtual void ExecuteEffect(AActor *Target);
+	virtual void ExecuteEffect(ACharacter *Target);
 	
 	EEffectType GetEffectType() const {return EffectType;};
 	

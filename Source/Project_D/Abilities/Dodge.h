@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilityBase.h"
+#include "Ability.h"
 #include "Dodge.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_D_API UDodge : public UAbilityBase
+class PROJECT_D_API UDodge : public UAbility
 {
 	GENERATED_BODY()
 

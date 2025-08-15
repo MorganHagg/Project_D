@@ -3,7 +3,7 @@
 
 #include "Dodge.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Project_D/Character/CharacterBase.h"
+#include "Project_D/Character/PlayableCharacter.h"
 
 void UDodge::OnInstant()
 {

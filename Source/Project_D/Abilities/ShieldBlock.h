@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilityBase.h"
+#include "Ability.h"
 #include "ShieldBlock.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_D_API UShieldBlock : public UAbilityBase
+class PROJECT_D_API UShieldBlock : public UAbility
 {
 	GENERATED_BODY()
 protected:
