@@ -20,8 +20,8 @@ class PROJECT_D_API IEffectHandler
 	
 public:
 	virtual void ApplyGameplayEffect(UGameplayEffect* Effect) = 0;
-	virtual void AddEffect(UGameplayEffect* Effect) = 0;
-	virtual void RemoveEffect(UGameplayEffect* Effect) = 0;
-	virtual void ReceiveDamage(UGameplayEffect* Effect) = 0;
-	virtual void ReceiveHealing(UGameplayEffect* Effect) = 0;
+	virtual void AddEffect(UGameplayEffect* Effect) = 0;		// TODO: Consider making this non pure virtual
+	virtual void RemoveEffect(UGameplayEffect* Effect) = 0;		// TODO: Consider making this non pure virtual
+	virtual void ReceiveDamage(UGameplayEffect* Effect) = 0;	// TODO: Consider making this non pure virtual
+	virtual void ReceiveHealing(UGameplayEffect* Effect) = 0;	// TODO: Consider making this non pure virtual
 };
