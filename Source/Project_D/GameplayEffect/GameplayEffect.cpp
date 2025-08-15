@@ -3,7 +3,7 @@
 
 #include "GameplayEffect.h"	
 #include "Kismet/KismetSystemLibrary.h"
-#include "Project_D/Interfaces/EffectHandler.h"
+#include "Project_D/Interfaces/EffectHandler/EffectHandler.h"
 
 
 void UGameplayEffect::Activate(ACharacter* Target)

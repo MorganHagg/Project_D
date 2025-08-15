@@ -6,9 +6,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 // Custom includes
-#include "../Interfaces/EffectHandler.h"
-#include "../AbilitySystem/AbilitySystem.h"
+#include "../Interfaces/EffectHandler/EffectHandler.h"
+#include "../Components/AbilitySystem/AbilitySystem.h"
 #include "../GameplayEffect/GameplayEffect.h"
+#include "../Components/AttributeSet/AttributeSet.h"
 //Generated
 #include "PlayableCharacter.generated.h"
 
@@ -50,6 +51,9 @@ public:
     void RemoveEffect(UGameplayEffect *NewEffect);
     void ReceiveDamage(UGameplayEffect* Effect);
     void ReceiveHealing(UGameplayEffect* Effect);
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    UAttributeSet *Attributes;
     
 protected:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
