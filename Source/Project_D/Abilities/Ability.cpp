@@ -1,22 +1,22 @@
 ﻿// AbilityBase.cpp
 
-#include "AbilityBase.h"
-#include "../Character/CharacterBase.h"
+#include "Ability.h"
+#include "../Character/PlayableCharacter.h"
 
-UAbilityBase::UAbilityBase()
+UAbility::UAbility()
 {
     CurrentState = EAbilityState::None;
     AbilityUUID = FGuid::NewGuid().ToString();
 }
 
-FString UAbilityBase::GetAbilityUUID()
+FString UAbility::GetAbilityUUID()
 {
     return AbilityUUID;
 }
 
-void UAbilityBase::ActivateAbility(AActor* NewCaster)
+void UAbility::ActivateAbility(AActor* NewCaster)
 {
-    MyCaster = Cast<ACharacterBase>(NewCaster);
+    MyCaster = Cast<APlayableCharacter>(NewCaster);
     switch (GetAbilityType())
     {
         case EAbilityActivationType::Interactive:   
@@ -36,7 +36,7 @@ void UAbilityBase::ActivateAbility(AActor* NewCaster)
                 World->GetTimerManager().SetTimer(
                     ThresholdTimerHandle,
                     this,
-                    &UAbilityBase::CheckHoldThreshold,
+                    &UAbility::CheckHoldThreshold,
                     ClickDelay,
                     false
                 );
@@ -67,7 +67,7 @@ void UAbilityBase::ActivateAbility(AActor* NewCaster)
     }
 }
 
-void UAbilityBase::CheckHoldThreshold()
+void UAbility::CheckHoldThreshold()
 {
     if (CurrentState == EAbilityState::Pressed)
     {
@@ -75,7 +75,7 @@ void UAbilityBase::CheckHoldThreshold()
     }
 }
 
-void UAbilityBase::EndAbility()
+void UAbility::EndAbility()
 {
     UWorld* World = GetWorld();
     if (!World)
@@ -99,13 +99,13 @@ void UAbilityBase::EndAbility()
     AbilityEndCleanup();
 }
 
-void UAbilityBase::ExecuteHoldRightClick()      //TODO: Change this name, it's really bad
+void UAbility::OnModify()      //TODO: Change this name, it's really bad
 {
     OnHoldRightClick();
     AbilityEndCleanup();
 }
 
-void UAbilityBase::AbilityEndCleanup()
+void UAbility::AbilityEndCleanup()
 {
     UWorld* World = GetWorld();
     if (World)

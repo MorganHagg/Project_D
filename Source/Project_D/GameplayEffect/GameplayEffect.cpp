@@ -1,22 +1,20 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameplayEffect.h"
-#include "../Character/CharacterBase.h"
+#include "GameplayEffect.h"	
 #include "Kismet/KismetSystemLibrary.h"
 #include "Project_D/Interfaces/EffectHandler.h"
 
 
-void UGameplayEffect::Activate(AActor* Target)
-{	//TODO: Change DoesImplementInterface - IEffectHandler* EffectActor = Cast<IEffectHandler>(Target); will only create a pointer if it's valid (WIll return null if interface
-	// is implemented in Blueprint (because Polymorphy, duh!)
+void UGameplayEffect::Activate(ACharacter* Target)
+{
 	if (Target && UKismetSystemLibrary::DoesImplementInterface(Target, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
 	{
 		MyTarget = Target;
 		IEffectHandler* EffectActor = Cast<IEffectHandler>(Target);
 		EffectActor->AddEffect(this);
-		
-		IntervalTimer = Interval;
+			
+		IntervalTimer = Interval;	
 		TimeRemaining = LifeTime;
 	}
 	else{	return;	}
@@ -26,7 +24,7 @@ void UGameplayEffect::Tick(float DeltaTime)
 {
 	if (MyTarget)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *MyTarget->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("I AM TICKING!!!!"));
 	}
 	
 	if (Interval != 0 && (IntervalTimer -= DeltaTime) <= 0)
@@ -51,11 +49,12 @@ void UGameplayEffect::Deactivate()
 	}
 }
 
-void UGameplayEffect::ExecuteEffect(AActor *Target)
+void UGameplayEffect::ExecuteEffect(ACharacter *Target)
 {
-	if (Target && UKismetSystemLibrary::DoesImplementInterface(MyTarget, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
+	if (Target && UKismetSystemLibrary::DoesImplementInterface(Target, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
 	{
-		Target = MyTarget;
+		Target = MyTarget;			//TODO: Check the chain to see if this target = MyTarget is needed,
+									//		or if it's redundants due to Activate (If it's not - Make one fuctnion that fires regardless if it's a periodic or instant effect
 		switch (GetDamageType())
 		{
 		case EDamageType::Physical:

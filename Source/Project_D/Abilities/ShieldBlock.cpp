@@ -3,8 +3,6 @@
 
 #include "ShieldBlock.h"
 
-#include "Project_D/Character/CharacterBase.h"
-
 
 void UShieldBlock::OnTap()
 {
