@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "../Abilities/Ability.h"
+#include "../../Abilities/Ability.h"
 #include "AbilitySystem.generated.h"
 
 class ACharacterBase;
