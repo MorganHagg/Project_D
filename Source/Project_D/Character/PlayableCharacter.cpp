@@ -11,6 +11,7 @@ APlayableCharacter::APlayableCharacter()
    Attributes = CreateDefaultSubobject<UAttributeSet>(TEXT("Attributes"));
 }
 
+// Input
 void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -50,46 +51,6 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
        }
     }
 }
-
-void APlayableCharacter::ApplyGameplayEffect(UGameplayEffect* Effect)
-{
-   switch (Effect->GetEffectType())
-   { 
-   case EEffectType::None:
-      {
-         GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("ApplyGameplayEffect : None"));
-      }
-   case EEffectType::Instant:
-      {
-         Effect->ExecuteEffect(this);
-      }
-   case EEffectType::Status:
-      {
-         Effect->Activate(this);
-      }
-   }
-}
-
-void APlayableCharacter::AddEffect(UGameplayEffect* NewEffect)
-{
-   GameplayEffects.Add(NewEffect->GetGUid(), NewEffect);
-}
-
-void APlayableCharacter::RemoveEffect(UGameplayEffect* NewEffect)
-{
-   GameplayEffects.Remove(NewEffect->GetGUid());
-}
-
-void APlayableCharacter::ReceiveDamage(UGameplayEffect* Effect)
-{
-   
-}
-
-void APlayableCharacter::ReceiveHealing(UGameplayEffect* Effect)
-{
-   
-}
-
 void APlayableCharacter::Move()
 { 
     if (PlayerController)
@@ -149,4 +110,66 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
           AbilitySystemComponent->OnAbilityInputReleased();
        }
     }
+}
+
+// Effects
+void APlayableCharacter::ApplyGameplayEffect(UGameplayEffect* Effect)
+{
+   switch (Effect->GetEffectType())
+   { 
+   case EEffectType::None:
+      {
+         GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("ApplyGameplayEffect : None"));
+      }
+   case EEffectType::Instant:
+      {
+         Effect->ExecuteEffect(this);
+      }
+   case EEffectType::Status:
+      {
+         Effect->Activate(this);
+      }
+   }
+}
+
+void APlayableCharacter::AddEffect(UGameplayEffect* NewEffect)
+{
+   GameplayEffects.Add(NewEffect->GetGUid(), NewEffect);
+}
+
+void APlayableCharacter::RemoveEffect(UGameplayEffect* NewEffect)
+{
+   GameplayEffects.Remove(NewEffect->GetGUid());
+}
+
+void APlayableCharacter::ModifyAttribute(UGameplayEffect* Effect)
+{
+   switch (Effect->GetEEffectTarget())
+   {
+   case EEffectTarget::None:
+      {
+         UE_LOG(LogTemp, Error, TEXT("Effect is lacking EffectTarget."))
+         break;
+      }
+   case EEffectTarget::Health:
+      {
+         float NewHealth = Attributes->Health.Current;
+         NewHealth -=Effect->Magnitude;
+         // Clamp and Update health
+         Attributes->Health.Current = FMath::Clamp(NewHealth, 0.0f, Attributes->Health.Max);
+    
+         // Check for death
+         if (NewHealth <= 0.0f)
+         {
+            UE_LOG(LogTemp, Warning, TEXT("Player died!"));
+            HandleDeath();  // Separate function for death logic
+         }
+         break;
+      }
+   }
+}
+
+void APlayableCharacter::HandleDeath()
+{
+   
 }

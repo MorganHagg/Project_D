@@ -5,17 +5,31 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Project_D/Interfaces/EffectHandler/EffectHandler.h"
 
-
+// TODO: Change ExecuteEffect(MyTarget) to use EffectActor instead 
 void UGameplayEffect::Activate(ACharacter* Target)
 {
 	if (Target && UKismetSystemLibrary::DoesImplementInterface(Target, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
 	{
 		MyTarget = Target;
 		IEffectHandler* EffectActor = Cast<IEffectHandler>(Target);
-		EffectActor->AddEffect(this);
+		switch (GetEffectType())
+		{
+		case EEffectType::None:
+			{
+				UE_LOG(LogTemp, Error, TEXT("Effect has no EffectType"));
+			}
+		case EEffectType::Instant:
+			{
+				ExecuteEffect(MyTarget);
+			}
+			case EEffectType::Status:
+			{
+				EffectActor->AddEffect(this);
 			
-		IntervalTimer = Interval;	
-		TimeRemaining = LifeTime;
+				IntervalTimer = Interval;	
+				TimeRemaining = LifeTime;		
+			}
+		}
 	}
 	else{	return;	}
 }
@@ -55,19 +69,7 @@ void UGameplayEffect::ExecuteEffect(ACharacter *Target)
 	{
 		Target = MyTarget;			//TODO: Check the chain to see if this target = MyTarget is needed,
 									//		or if it's redundants due to Activate (If it's not - Make one fuctnion that fires regardless if it's a periodic or instant effect
-		switch (GetDamageType())
-		{
-		case EDamageType::Physical:
-		case EDamageType::Magical:
-			{
-				IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
-				EffectActor->ReceiveDamage(this);
-			}
-		case EDamageType::Healing:
-			{
-				IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
-				EffectActor->ReceiveHealing(this);
-			}
-		}
+		IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
+		EffectActor->ModifyAttribute(this);
 	}
 }

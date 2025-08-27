@@ -5,12 +5,10 @@
 
 
 UENUM(BlueprintType)
-enum class EDamageType : uint8
+enum class EEffectTarget : uint8
 {
 	None		UMETA(DisplayName = "None"),
-	Physical	UMETA(DisplayName = "Physical"),
-	Magical		UMETA(DisplayName = "Magical"), 
-	Healing		UMETA(DisplayName = "Healing")
+	Health		UMETA(DisplayName = "Health")
 };
 
 

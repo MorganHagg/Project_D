@@ -6,9 +6,6 @@
 #include "Ability.h"
 #include "ShieldBlock.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class PROJECT_D_API UShieldBlock : public UAbility
 {

@@ -22,10 +22,10 @@ class PROJECT_D_API UGameplayEffect : public UObject, public FTickableGameObject
 public:
 
 	UPROPERTY(BlueprintReadWrite)
-	EEffectType EffectType = EEffectType::None;
+	EEffectTarget EffectTarget = EEffectTarget::None;
 	
 	UPROPERTY(BlueprintReadWrite)
-	EDamageType DamageType = EDamageType::None;
+	EEffectType EffectType = EEffectType::None;
 	
 	UPROPERTY(EditAnywhere)
 	float Interval = 0.0f;    // 0 = no interval ticking
@@ -34,10 +34,7 @@ public:
 	float LifeTime = 0.0f;    // 0 = permanent
 
 	UPROPERTY(EditAnywhere)
-	float Damage = 0.f;
-
-	UPROPERTY(EditAnywhere)
-	float Healing = 0.f;
+	float Magnitude = 0.f;	  // Strength of the effect
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ACharacter *MyTarget = nullptr;
@@ -54,7 +51,7 @@ public:
 	
 	EEffectType GetEffectType() const {return EffectType;};
 	
-	EDamageType GetDamageType() const {return DamageType;};
+	EEffectTarget GetEEffectTarget() const {return EffectTarget;};
 	
 	virtual TStatId GetStatId() const override { return Super::GetStatID(); }
 

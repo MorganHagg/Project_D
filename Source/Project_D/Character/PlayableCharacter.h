@@ -45,15 +45,18 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     TMap<FString, UGameplayEffect*> GameplayEffects;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    UAttributeSet *Attributes;
+    
     // Interface functions
+    UAttributeSet* GetAttributeSet() {return Attributes;};
     void ApplyGameplayEffect(UGameplayEffect* Effect);
     void AddEffect(UGameplayEffect *NewEffect);
     void RemoveEffect(UGameplayEffect *NewEffect);
-    void ReceiveDamage(UGameplayEffect* Effect);
-    void ReceiveHealing(UGameplayEffect* Effect);
+    void ModifyAttribute(UGameplayEffect* Effect);
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    UAttributeSet *Attributes;
+    void HandleDeath();
+
     
 protected:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
