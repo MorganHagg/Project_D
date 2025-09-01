@@ -12,38 +12,12 @@ void UGameplayEffect::Activate(ACharacter* Target) {
         
         MyTarget = Target;
         TargetInterface = Cast<IEffectHandler>(Target); // Cache it once
-        
-	if (IsInstant()) {
-		ExecuteEffect(); // Just execute and we're done
-	} else {
-		TargetInterface->AddEffect(this); // Add to target's effect list
-		IntervalTimer = Interval;
-		TimeRemaining = LifeTime;
-	}
+	VerifyValues();
 }
 
-void UGameplayEffect::Tick(float DeltaTime)
+void UGameplayEffect::VerifyValues()
 {
-	if (MyTarget)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("I AM TICKING!!!!"));
-	}
+	if (EffectName == "NO_NAME")
+		UE_LOG(LogTemp, Error, TEXT("%s is missing a name"), *GetName());
 	
-	if (Interval != 0 && (IntervalTimer -= DeltaTime) <= 0)
-	{
-		ExecuteEffect();
-		IntervalTimer = Interval;
-	}
-
-	if (LifeTime != 0 && (TimeRemaining -= DeltaTime) <= 0)
-	{
-		Deactivate();
-		return;
-	}
-}
-
-void UGameplayEffect::Deactivate() {
-	if (TargetInterface) {
-		TargetInterface->RemoveEffect(this);
-	}
 }

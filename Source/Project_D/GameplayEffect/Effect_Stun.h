@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayEffect.h"
-#include "Stun_Effect.generated.h"
+#include "Effect_Persistent.h"
+#include "Effect_Stun.generated.h"
 
 
 UCLASS()
-class PROJECT_D_API UStun_Effect : public UGameplayEffect
+class PROJECT_D_API UEffect_Stun : public UEffect_Persistent
 {
 	GENERATED_BODY()
 
