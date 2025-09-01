@@ -116,28 +116,16 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
 // handle complicated logic. 
 void APlayableCharacter::ModifyAttribute(UGameplayEffect* Effect)
 {
-   switch (Effect->GetEEffectTarget())
-   {
-   case EEffectTarget::None:
-      {
-         UE_LOG(LogTemp, Error, TEXT("Effect is lacking EffectTarget."))
-         break;
-      }
-   case EEffectTarget::Health:
-      {
-         float NewHealth = Attributes->Health.Current;
-         NewHealth -=Effect->Magnitude;
-         // Clamp and Update health
-         Attributes->Health.Current = FMath::Clamp(NewHealth, 0.0f, Attributes->Health.Max);
+   float NewHealth = Attributes->Health.Current;
+   NewHealth -=Effect->Magnitude;
+   // Clamp and Update health
+   Attributes->Health.Current = FMath::Clamp(NewHealth, 0.0f, Attributes->Health.Max);
     
-         // Check for death
-         if (NewHealth <= 0.0f)
-         {
-            UE_LOG(LogTemp, Warning, TEXT("Player died!"));
-            HandleDeath();  // Separate function for death logic
-         }
-         break;
-      }
+   // Check for death
+   if (NewHealth <= 0.0f)
+   {
+      UE_LOG(LogTemp, Warning, TEXT("Player died!"));
+      HandleDeath();  // Separate function for death logic
    }
 }
 

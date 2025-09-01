@@ -6,7 +6,6 @@
 #include "UObject/Object.h"
 #include "GameFramework/Character.h"
 #include "Tickable.h"
-#include "EffectType.h"
 #include "GameplayEffect.generated.h"
 
 class ACharacterBase;
@@ -22,9 +21,6 @@ protected:
 	};
 	
 public:
-
-	UPROPERTY(BlueprintReadWrite)
-	EEffectTarget EffectTarget = EEffectTarget::None;
 	
 	UPROPERTY(EditAnywhere)
 	float Interval = 0.0f;    // 0 = no interval ticking
@@ -48,8 +44,6 @@ public:
 	virtual void Deactivate();
 
 	virtual void ExecuteEffect() {};
-	
-	EEffectTarget GetEEffectTarget() const {return EffectTarget;};
 	
 	virtual TStatId GetStatId() const override { return Super::GetStatID(); }
 
