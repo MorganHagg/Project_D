@@ -2,9 +2,7 @@
 
 
 #include "AbilitySystem.h"
-//#include "../Character/PlayableCharacter.h"
 
-// Sets default values for this component's properties
 UAbilitySystem::UAbilitySystem()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -12,8 +10,6 @@ UAbilitySystem::UAbilitySystem()
 	ActiveAbility = nullptr;
 }
 
-
-// Called when the game starts
 void UAbilitySystem::BeginPlay()
 {
 	Super::BeginPlay();
@@ -25,7 +21,8 @@ void UAbilitySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-// In AbilitySystem.cpp
+
+// CHAIN: Add new ability
 void UAbilitySystem::AddAbility(TSubclassOf<UAbility> AbilityClass, int Index)
 {
 	if (!AbilityClass)
@@ -78,7 +75,6 @@ void UAbilitySystem::RemoveAbility(TSubclassOf<UAbility> AbilityClass)
 	}
 }
 
-// Alternative: Remove by index (often more useful)
 void UAbilitySystem::RemoveAbilityAtIndex(int Index)
 {
 	if (GrantedAbilities.IsValidIndex(Index))
@@ -87,6 +83,8 @@ void UAbilitySystem::RemoveAbilityAtIndex(int Index)
 	}
 }
 
+
+// CHAIN: Input
 void UAbilitySystem::InitializeAbility(int AbilityIndex)
 {
 	if (GrantedAbilities.IsValidIndex(AbilityIndex) && GrantedAbilities[AbilityIndex] && MyOwner)
@@ -101,9 +99,9 @@ void UAbilitySystem::InitializeAbility(int AbilityIndex)
 	}
 }
 
-	void UAbilitySystem::OnAbilityInputReleased()
+// Ends the ability, marks the ability for deletion by GC
+void UAbilitySystem::OnAbilityInputReleased()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, TEXT("Input Released"));
 	if (ActiveAbility != nullptr)
 	{
 		ActiveAbility->EndAbility();

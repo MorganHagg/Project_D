@@ -6,9 +6,6 @@
 #include "Ability.h"
 #include "ShieldBlock.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class PROJECT_D_API UShieldBlock : public UAbility
 {
@@ -25,5 +22,6 @@ protected:
 	
 	void OnTap() override;
 	void OnHold() override;
-	void OnHoldRightClick() override;
+	void OnHoldEnd() override;
+	void OnModify() override;
 };

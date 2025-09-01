@@ -10,11 +10,13 @@
 #include "GameplayEffect.generated.h"
 
 class ACharacterBase;
+class IEffectHandler;
 
 UCLASS()
 class PROJECT_D_API UGameplayEffect : public UObject, public FTickableGameObject
 {
 	GENERATED_BODY()
+protected:
 	UGameplayEffect(): Effect_UUID(FGuid::NewGuid().ToString(EGuidFormats::Digits))
 	{
 	};
@@ -22,39 +24,32 @@ class PROJECT_D_API UGameplayEffect : public UObject, public FTickableGameObject
 public:
 
 	UPROPERTY(BlueprintReadWrite)
-	EEffectType EffectType = EEffectType::None;
-	
-	UPROPERTY(BlueprintReadWrite)
-	EDamageType DamageType = EDamageType::None;
+	EEffectTarget EffectTarget = EEffectTarget::None;
 	
 	UPROPERTY(EditAnywhere)
 	float Interval = 0.0f;    // 0 = no interval ticking
     
 	UPROPERTY(EditAnywhere)
 	float LifeTime = 0.0f;    // 0 = permanent
-
+	bool IsInstant() const { return LifeTime <= 0.0f; }
+	
 	UPROPERTY(EditAnywhere)
-	float Damage = 0.f;
-
-	UPROPERTY(EditAnywhere)
-	float Healing = 0.f;
+	float Magnitude = 0.f;	  // Strength of the effect
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ACharacter *MyTarget = nullptr;
 
+	IEffectHandler* TargetInterface = nullptr;
+	
 	virtual void Activate(ACharacter *Target);
 	
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void Deactivate();
 
-	virtual void IntervalEffect() {};
-
-	virtual void ExecuteEffect(ACharacter *Target);
+	virtual void ExecuteEffect() {};
 	
-	EEffectType GetEffectType() const {return EffectType;};
-	
-	EDamageType GetDamageType() const {return DamageType;};
+	EEffectTarget GetEEffectTarget() const {return EffectTarget;};
 	
 	virtual TStatId GetStatId() const override { return Super::GetStatID(); }
 
