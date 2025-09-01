@@ -47,7 +47,7 @@ public:
 
 	virtual void IntervalEffect() {};
 
-	virtual void ExecuteEffect(ACharacter *Target);
+	virtual void ExecuteEffect();
 	
 	EEffectType GetEffectType() const {return EffectType;};
 	

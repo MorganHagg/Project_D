@@ -20,7 +20,7 @@ void UGameplayEffect::Activate(ACharacter* Target)
 			}
 		case EEffectType::Instant:
 			{
-				ExecuteEffect(MyTarget);
+				ExecuteEffect();
 			}
 			case EEffectType::Status:
 			{
@@ -63,12 +63,10 @@ void UGameplayEffect::Deactivate()
 	}
 }
 
-void UGameplayEffect::ExecuteEffect(ACharacter *Target)
+void UGameplayEffect::ExecuteEffect()
 {
-	if (Target && UKismetSystemLibrary::DoesImplementInterface(Target, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
+	if (MyTarget && UKismetSystemLibrary::DoesImplementInterface(MyTarget, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
 	{
-		Target = MyTarget;			//TODO: Check the chain to see if this target = MyTarget is needed,
-									//		or if it's redundants due to Activate (If it's not - Make one fuctnion that fires regardless if it's a periodic or instant effect
 		IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
 		EffectActor->ModifyAttribute(this);
 	}

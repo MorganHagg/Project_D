@@ -112,6 +112,7 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
     }
 }
 
+// TODO: Both PlayableCharacter and GameplayEffects run case switch on EffectTypej 
 // Effects
 void APlayableCharacter::ApplyGameplayEffect(UGameplayEffect* Effect)
 {
@@ -123,7 +124,7 @@ void APlayableCharacter::ApplyGameplayEffect(UGameplayEffect* Effect)
       }
    case EEffectType::Instant:
       {
-         Effect->ExecuteEffect(this);
+         Effect->ExecuteEffect();
       }
    case EEffectType::Status:
       {
