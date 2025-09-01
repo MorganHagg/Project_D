@@ -112,6 +112,8 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
     }
 }
 
+// TODO: Change this so it takes in EffectTarget (i.e, the attribute to be changed) and amount - Let the effect itself
+// handle complicated logic. 
 void APlayableCharacter::ModifyAttribute(UGameplayEffect* Effect)
 {
    switch (Effect->GetEEffectTarget())
