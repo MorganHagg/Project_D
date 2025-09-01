@@ -50,11 +50,11 @@ public:
     
     // Interface functions
     UAttributeSet* GetAttributeSet() {return Attributes;};
-    void ApplyGameplayEffect(UGameplayEffect* Effect);
-    void AddEffect(UGameplayEffect *NewEffect);
-    void RemoveEffect(UGameplayEffect *NewEffect);
     void ModifyAttribute(UGameplayEffect* Effect);
 
+    TMap<FString, UGameplayEffect*>& GetEffectMap() {return GameplayEffects;};
+
+    
     void HandleDeath();
 
     

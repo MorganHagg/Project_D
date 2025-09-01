@@ -5,33 +5,21 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Project_D/Interfaces/EffectHandler/EffectHandler.h"
 
-// TODO: Change ExecuteEffect(MyTarget) to use EffectActor instead 
-void UGameplayEffect::Activate(ACharacter* Target)
-{
-	if (Target && UKismetSystemLibrary::DoesImplementInterface(Target, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
-	{
-		MyTarget = Target;
-		IEffectHandler* EffectActor = Cast<IEffectHandler>(Target);
-		switch (GetEffectType())
-		{
-		case EEffectType::None:
-			{
-				UE_LOG(LogTemp, Error, TEXT("Effect has no EffectType"));
-			}
-		case EEffectType::Instant:
-			{
-				ExecuteEffect();
-			}
-			case EEffectType::Status:
-			{
-				EffectActor->AddEffect(this);
-			
-				IntervalTimer = Interval;	
-				TimeRemaining = LifeTime;		
-			}
-		}
+void UGameplayEffect::Activate(ACharacter* Target) {
+        if (!Target || !UKismetSystemLibrary::DoesImplementInterface(Target, UEffectHandler::StaticClass())) {
+            return;
+        }
+        
+        MyTarget = Target;
+        TargetInterface = Cast<IEffectHandler>(Target); // Cache it once
+        
+	if (IsInstant()) {
+		ExecuteEffect(); // Just execute and we're done
+	} else {
+		TargetInterface->AddEffect(this); // Add to target's effect list
+		IntervalTimer = Interval;
+		TimeRemaining = LifeTime;
 	}
-	else{	return;	}
 }
 
 void UGameplayEffect::Tick(float DeltaTime)
@@ -43,7 +31,7 @@ void UGameplayEffect::Tick(float DeltaTime)
 	
 	if (Interval != 0 && (IntervalTimer -= DeltaTime) <= 0)
 	{
-		IntervalEffect();
+		ExecuteEffect();
 		IntervalTimer = Interval;
 	}
 
@@ -54,20 +42,8 @@ void UGameplayEffect::Tick(float DeltaTime)
 	}
 }
 
-void UGameplayEffect::Deactivate()
-{
-	if (MyTarget && UKismetSystemLibrary::DoesImplementInterface(MyTarget, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
-	{
-		IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
-		EffectActor->RemoveEffect(this);
-	}
-}
-
-void UGameplayEffect::ExecuteEffect()
-{
-	if (MyTarget && UKismetSystemLibrary::DoesImplementInterface(MyTarget, UEffectHandler::StaticClass()))	// Checks if MyTarget implements Interface "EffectHandler"
-	{
-		IEffectHandler* EffectActor = Cast<IEffectHandler>(MyTarget);
-		EffectActor->ModifyAttribute(this);
+void UGameplayEffect::Deactivate() {
+	if (TargetInterface) {
+		TargetInterface->RemoveEffect(this);
 	}
 }

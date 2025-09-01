@@ -112,37 +112,6 @@ void APlayableCharacter::OnAbilityInputReleased(const FInputActionInstance& Inst
     }
 }
 
-// TODO: Both PlayableCharacter and GameplayEffects run case switch on EffectTypej 
-// Effects
-void APlayableCharacter::ApplyGameplayEffect(UGameplayEffect* Effect)
-{
-   switch (Effect->GetEffectType())
-   { 
-   case EEffectType::None:
-      {
-         GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("ApplyGameplayEffect : None"));
-      }
-   case EEffectType::Instant:
-      {
-         Effect->ExecuteEffect();
-      }
-   case EEffectType::Status:
-      {
-         Effect->Activate(this);
-      }
-   }
-}
-
-void APlayableCharacter::AddEffect(UGameplayEffect* NewEffect)
-{
-   GameplayEffects.Add(NewEffect->GetGUid(), NewEffect);
-}
-
-void APlayableCharacter::RemoveEffect(UGameplayEffect* NewEffect)
-{
-   GameplayEffects.Remove(NewEffect->GetGUid());
-}
-
 void APlayableCharacter::ModifyAttribute(UGameplayEffect* Effect)
 {
    switch (Effect->GetEEffectTarget())

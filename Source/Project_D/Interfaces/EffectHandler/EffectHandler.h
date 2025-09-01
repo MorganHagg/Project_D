@@ -20,9 +20,8 @@ class PROJECT_D_API IEffectHandler
 	GENERATED_BODY()
 	
 public:
-	virtual UAttributeSet* GetAttributeSet() = 0;					// To force implementing Actors to have AttributeSet
-	virtual void ApplyGameplayEffect(UGameplayEffect* Effect) = 0;
-	virtual void AddEffect(UGameplayEffect* Effect) = 0;
-	virtual void RemoveEffect(UGameplayEffect* Effect) = 0;
-	virtual void ModifyAttribute(UGameplayEffect* Effect) = 0;
+	virtual TMap<FString, UGameplayEffect*>& GetEffectMap() = 0;
+	virtual UAttributeSet* GetAttributeSet() = 0;
+	virtual void AddEffect(UGameplayEffect* Effect);
+	virtual void RemoveEffect(UGameplayEffect* Effect);
 };
