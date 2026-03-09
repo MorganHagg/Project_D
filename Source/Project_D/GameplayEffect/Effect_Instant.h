@@ -11,21 +11,33 @@ class PROJECT_D_API UEffect_Instant : public UGameplayEffect
     
 public:
 	// Factory method - creates and configures the effect
-	static UEffect_Instant* Create(const FString& Name = "Instant Effect", bool bIsHelpful, float Magnitude, UObject* Outer) {
+	static UEffect_Instant* Create(
+	const FString& Name = "Instant Effect", 
+	bool bIsHelpful = true, 
+	float Magnitude = 0.0f, 
+	UObject* Outer = nullptr
+) {
 		UEffect_Instant* NewEffect = NewObject<UEffect_Instant>(Outer);
 		NewEffect->EffectName = Name;
 		NewEffect->bIsHelpful = bIsHelpful;
 		NewEffect->Magnitude = Magnitude;
 		return NewEffect;
 	}
-    
-	// Convenience factory methods
-	static UEffect_Instant* CreateDamage(const FString& Name = "Instant Damage", float Damage, UObject* Outer) {
-		return Create(Name, false, Damage, Outer);  // false = harmful
+
+	static UEffect_Instant* CreateDamage(
+		const FString& Name = "Instant Damage", 
+		float Damage = 0.0f, 
+		UObject* Outer = nullptr
+	) {
+		return Create(Name, false, Damage, Outer);
 	}
-    
-	static UEffect_Instant* CreateHeal(const FString& Name = "Instant Heal", float HealAmount, UObject* Outer) {
-		return Create(Name, true, HealAmount, Outer);  // true = helpful
+
+	static UEffect_Instant* CreateHeal(
+		const FString& Name = "Instant Heal", 
+		float HealAmount = 0.0f, 
+		UObject* Outer = nullptr
+	) {
+		return Create(Name, true, HealAmount, Outer);
 	}
 
 	void VerifyValues() override;

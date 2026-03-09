@@ -20,7 +20,7 @@ class UInputAction;
 UENUM(BlueprintType)
 enum class EAbilityInputID : uint8
 {
-    None = 0,
+    None = 0, 
     Ability1 = 1,
     Ability2 = 2,
     Ability3 = 3,

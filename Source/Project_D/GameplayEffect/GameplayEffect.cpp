@@ -19,5 +19,5 @@ void UGameplayEffect::VerifyValues()
 {
 	if (EffectName == "NO_NAME")
 		UE_LOG(LogTemp, Error, TEXT("%s is missing a name"), *GetName());
-	
+	 
 }
