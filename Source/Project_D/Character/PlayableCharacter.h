@@ -2,33 +2,19 @@
 
 // Engine includes
 #include "CoreMinimal.h"
-#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-// Custom includes
+// Custom classes
 #include "../Interfaces/EffectHandler/EffectHandler.h"
 #include "../Components/AbilitySystem/AbilitySystem.h"
 #include "../GameplayEffect/GameplayEffect.h"
 #include "../Components/AttributeSet/AttributeSet.h"
-//Generated
+#include "../Input/ControllerBase.h"
+// Generated
 #include "PlayableCharacter.generated.h"
 
 class UInputMappingContext;
 class UInputAction;
-
-// Ability input enum
-UENUM(BlueprintType)
-enum class EAbilityInputID : uint8
-{
-    None = 0, 
-    Ability1 = 1,
-    Ability2 = 2,
-    Ability3 = 3,
-    Ability4 = 4,
-    Ability5 = 5,
-    Ability6 = 6,
-    Ability7 = 7
-};
 
 UCLASS()
 class PROJECT_D_API APlayableCharacter : public ACharacter, public IEffectHandler
@@ -59,11 +45,14 @@ public:
 
     
 protected:
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    //virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
     // Input Actions
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputMappingContext* InputMapping;
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    UInputMappingContext* MappingContext_Movement;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    UInputMappingContext* MappingContext_Abilities;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* IA_Move;
@@ -95,9 +84,9 @@ protected:
     APlayerController* PlayerController;
 
 
-private:
+public:
     // Input handling functions
-    void Move();
+    void Move(const FInputActionValue& Value);
     void RightClick(const FInputActionInstance& Instance);
     void RightClickReleased(const FInputActionInstance& Instance);
 
