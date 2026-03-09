@@ -6,20 +6,33 @@
 
 void UShieldBlock::OnTap()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Starting Effect 1");
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Shield parry");
 }
 
 void UShieldBlock::OnHold()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Starting Effect 2");
+	AddBuff();
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Shield block");
 }
 
 void UShieldBlock::OnHoldEnd()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Ending Effect 2");
+	RemoveBuff();
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Ending Shield Block");
 }
 
 void UShieldBlock::OnModify()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Executing Effect 3 Shield block");
+	RemoveBuff();
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Shield charge");
+}
+
+void UShieldBlock::AddBuff()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Shield Block AddBuff"));
+}
+
+void UShieldBlock::RemoveBuff()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Shield Block RemoveBuff"));
 }

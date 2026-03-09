@@ -1,9 +1,11 @@
-﻿#include "ControllerBase.h"
+﻿// Engine classes
+#include "ControllerBase.h"
+#include "EnhancedInputComponent.h"
+// Custom classes
 #include "../Character/PlayableCharacter.h"
 
 AControllerBase::AControllerBase()
 {
-	
 }
 
 void AControllerBase::BeginPlay()
@@ -27,17 +29,11 @@ void AControllerBase::SetupInputComponent()
 	if (UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
 		Input->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AControllerBase::Move);
-		Input->BindAction(IA_RightClick, ETriggerEvent::Started, this, &AControllerBase::RightClick);
-		Input->BindAction(IA_RightClick, ETriggerEvent::Completed, this, &AControllerBase::RightClickReleased);
        
 		// Bind ability inputs
 		TArray<TPair<UInputAction*, EAbilityInputID>> Bindings = {
-			{ Ability1Action, EAbilityInputID::Ability1 },
-			{ Ability2Action, EAbilityInputID::Ability2 },
-			{ Ability3Action, EAbilityInputID::Ability3 },
-			{ Ability4Action, EAbilityInputID::Ability4 },
-			{ Ability5Action, EAbilityInputID::Ability5 },
-			{ Ability6Action, EAbilityInputID::Ability6 }
+			{ IA_LeftClick, EAbilityInputID::Ability0 },
+			{ IA_RightClick, EAbilityInputID::Ability1 }
 		};
 
 		for (const auto& Pair : Bindings)
@@ -89,18 +85,33 @@ void AControllerBase::FaceMouseCursor()
 	}
 }
 
-void AControllerBase::RightClick(const FInputActionInstance& Instance)
-{
-}
-
-void AControllerBase::RightClickReleased(const FInputActionInstance& Instance)
-{
-}
-
 void AControllerBase::OnAbilityInputPressed(const FInputActionInstance& Instance)
 {
+	if (!PlayerReference->AbilitySystemComponent) return;
+
+	if (const UInputAction* Action = Instance.GetSourceAction())
+	{
+		if (AbilityInputMap.Contains(Action->GetFName()))
+		{
+			const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
+			if (PlayerReference->AbilitySystemComponent->ActiveAbility)
+				PlayerReference->AbilitySystemComponent->ActiveAbility->DoModify();
+			else
+				PlayerReference->AbilitySystemComponent->InitializeAbility(static_cast<int32>(InputID));
+		}
+	}
 }
 
 void AControllerBase::OnAbilityInputReleased(const FInputActionInstance& Instance)
 {
+	if (!PlayerReference->AbilitySystemComponent) return;
+
+	if (const UInputAction* Action = Instance.GetSourceAction())
+	{
+		if (AbilityInputMap.Contains(Action->GetFName()))
+		{
+			const EAbilityInputID InputID = AbilityInputMap[Action->GetFName()];
+			PlayerReference->AbilitySystemComponent->OnAbilityInputReleased();
+		}
+	}
 }

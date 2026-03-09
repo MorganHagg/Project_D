@@ -69,14 +69,16 @@ void UAbility::ActivateAbility(AActor* NewCaster)
 void UAbility::EndAbility()
 {
     UWorld* World = GetWorld();
-    if (!World)
+    if (World)
     {
-        UE_LOG(LogTemp, Error, TEXT("GetWorld() returned null in InputReleased"));
-        return;
+        float HoldTime = World->GetTimeSeconds() - PressStartTime;      //TODO: Check if this is needed
+        World->GetTimerManager().ClearTimer(ThresholdTimerHandle);    
     }
     
-    float HoldTime = World->GetTimeSeconds() - PressStartTime;      //TODO: Check if this is needed
-    World->GetTimerManager().ClearTimer(ThresholdTimerHandle);
+    if (CurrentState == EAbilityState::Effect3_Modified)
+    {
+        OnModify();
+    }
     
     if (CurrentState == EAbilityState::Effect2_Charging)
     {
@@ -86,6 +88,11 @@ void UAbility::EndAbility()
     {
         OnTap();
     }
+}
+
+EAbilityState UAbility::GetCurrentState()
+{
+    return CurrentState;
 }
 
 // Ran 

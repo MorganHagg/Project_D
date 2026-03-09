@@ -45,56 +45,8 @@ public:
 
     
 protected:
-    //virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-    // Input Actions
-    UPROPERTY(EditDefaultsOnly, Category = "Input")
-    UInputMappingContext* MappingContext_Movement;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Input")
-    UInputMappingContext* MappingContext_Abilities;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* IA_Move;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* IA_RightClick;
-
-    // Ability Input Actions
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
-    UInputAction* Ability1Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
-    UInputAction* Ability2Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
-    UInputAction* Ability3Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
-    UInputAction* Ability4Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
-    UInputAction* Ability5Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Abilities")
-    UInputAction* Ability6Action;
-
     // References
     UPROPERTY(BlueprintReadOnly, Category = "Player")
     APlayerController* PlayerController;
 
-
-public:
-    // Input handling functions
-    void Move(const FInputActionValue& Value);
-    void RightClick(const FInputActionInstance& Instance);
-    void RightClickReleased(const FInputActionInstance& Instance);
-
-    TMap<FName, EAbilityInputID> AbilityInputMap;
-    
-    UFUNCTION()
-    void OnAbilityInputPressed(const FInputActionInstance& Instance);
-
-    UFUNCTION()
-    void OnAbilityInputReleased(const FInputActionInstance& Instance);
 };
