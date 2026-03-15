@@ -33,17 +33,23 @@ void AEnemyBase::GeneratePersonality()
 	Personality.Tactical);
 }
 
-void AEnemyBase::SetPersonality(int Aggression, float Defense, float Tactic)
+void AEnemyBase::SetPersonality(float Aggression, float Defense, float Tactic)
 {
 	Personality.Aggressive = Aggression;
 	Personality.Defensive  = Defense;
 	Personality.Tactical   = Tactic;
 }
 
+FPersonality AEnemyBase::ReturnPersonality() const
+{
+	return Personality;
+}
+
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 	GeneratePersonality();
+	SetPersonality(0.3f, 0.3f, 0.4f);
 }
 
 void AEnemyBase::Tick(float DeltaTime)
