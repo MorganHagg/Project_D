@@ -24,4 +24,7 @@ protected:
 	void OnHold() override;
 	void OnHoldEnd() override;
 	void OnModify() override;
+
+	void AddBuff();
+	void RemoveBuff();
 };

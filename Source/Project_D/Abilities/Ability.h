@@ -13,7 +13,8 @@ enum class EAbilityState : uint8
 {
 	None,
 	Pressed,
-	Effect2_Charging
+	Effect2_Charging,
+	Effect3_Modified
 };
 
 UENUM(BlueprintType)
@@ -47,10 +48,12 @@ public:
 	void ActivateAbility(AActor* NewCaster);
 
 	// On right-click while hold
-	void DoModify() {OnModify();};
+	void DoModify() {CurrentState = EAbilityState::Effect3_Modified;};
 
 	// Ending all abilities
 	void EndAbility();
+
+	EAbilityState GetCurrentState();
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)
